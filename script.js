@@ -1,1 +1,370 @@
 
+// Set the dimensions of the canvas / graph
+var margin = {top: 30, right: 20, bottom: 30, left: 50},
+    width = 600 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
+
+// Parse the date / time
+var parseDate = d3.time.format("%d-%b-%y").parse,
+    formatDate = d3.time.format("%d-%b"),
+    bisectDate = d3.bisector(function(d) { return d.date; }).left;
+
+// Set the ranges
+var x = d3.time.scale().range([0, width]);
+var y = d3.scale.linear().range([300, 0]);
+var y_two = d3.scale.linear().range([400, 300]);
+var y_three = d3.scale.linear().range([500, 400]);
+
+
+// Define the axes
+var xAxis = d3.svg.axis().scale(x)
+    .orient("bottom").ticks(5);
+
+var yAxis = d3.svg.axis().scale(y)
+    .orient("left").ticks(5);
+
+var yAxis2 = d3.svg.axis().scale(y_two)
+    .orient("left").ticks(5);
+
+var yAxis3 = d3.svg.axis().scale(y_three)
+    .orient("left").ticks(5);
+
+// Define the line/*
+var valueline_1 = d3.svg.line()
+    .x(function(d) { return x(d.date); })
+    .y(function(d) {return y(d.data1); })
+
+var valueline_corr_1_1 = d3.svg.line()
+    .x(function(d) { 
+            return x(d.date); })
+    .y(function(d) {
+            return y(d.data1); })
+    .defined(function(d) { 
+        if(d.flag==1){
+            return d; }})
+
+var valueline_corr_1_2 = d3.svg.line()
+    .x(function(d) { 
+            return x(d.date); })
+    .y(function(d) {
+            return y(d.data1); })
+    .defined(function(d) { 
+        if(d.flag==2){
+            return d; }})
+
+var valueline_2 = d3.svg.line()
+    .x(function(d) {return x(d.date); })
+    .y(function(d) {
+        return y_two(d.data2); })
+
+var valueline_corr_2 = d3.svg.line()
+    .x(function(d) { 
+            return x(d.date); })
+    .y(function(d) {
+            return y_two(d.data2); })
+    .defined(function(d) { 
+        if(d.flag==1){
+            return d; }})
+   
+var valueline_3 = d3.svg.line()
+    .x(function(d) {return x(d.date); })
+    .y(function(d) {
+        return y_three(d.data3); })
+
+var valueline_corr_3 = d3.svg.line()
+    .x(function(d) { 
+            return x(d.date); })
+    .y(function(d) {
+            return y_three(d.data3); })
+    .defined(function(d) { 
+        if(d.flag==2){
+            return d; }})
+
+
+// Adds the svg canvas
+var svg = d3.select("body")
+    .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+        .attr("transform", 
+              "translate(" + margin.left + "," + margin.top + ")");
+
+var lineSvg = svg.append("g"); 
+
+var focus = svg.append("g") 
+    .style("display", "none");
+
+// Get the data
+d3.csv("CHXRSA.csv", function(error, data) {
+    data.forEach(function(d) {
+        d.date = parseDate(d.date);
+        d.data1= +d.data1;
+    });
+
+    // Scale the range of the data
+    x.domain(d3.extent(data, function(d) { return d.date; }));
+    y.domain([d3.min(data, function(d) { return d.data1; }), 
+        d3.max(data, function(d) { return d.data1; })]);
+
+    var dataFiltered = data;
+
+
+
+    // Add the valueline path.
+    lineSvg.append("path")
+        .data(data)
+        .attr("class", "line")
+        .attr("d", valueline_1(data));/*
+        .style('fill',function(data){
+            return (data.close > 100) ? 'red' : 'blue';
+        });*/
+
+    // Add the valueline path.
+    lineSvg.append("path")
+        .data(data)
+        .attr("class", "line")
+        .attr("d", valueline_corr_1_1(dataFiltered))
+        .style('stroke','firebrick');
+
+    // Add the valueline path.
+    lineSvg.append("path")
+        .data(data)
+        .attr("class", "line")
+        .attr("d", valueline_corr_1_2(dataFiltered))
+        .style('stroke','coral');
+
+
+    svg.append("linearGradient")
+      .data(data)
+      .attr("id", 'line-gradient')
+      .attr("gradientUnits", "userSpaceOnUse")
+      .attr("x1", -300).attr("y1", 0)
+      .attr("x2",300).attr("y2", 0)
+      .selectAll("stop")                      
+        .data([                             
+            {offset: "0%", color: "red"},       
+            {offset: "25%", color: "red"},  
+            {offset: "25%", color: "black"},        
+            {offset: "75%", color: "black"},        
+            {offset: "75%", color: "lawngreen"},    
+            {offset: "100%", color: "lawngreen"}    
+        ])                  
+    .enter().append("stop")         
+        .attr("offset", function(d) { return d.offset; })   
+        .attr("stop-color", function(d) { return d.color; });   
+
+
+
+    // Add the X Axis
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + 300 + ")")
+        .call(xAxis);
+
+    // Add the Y Axis
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+   // append the x line
+    focus.append("line")
+        .attr("class", "x")
+        .style("stroke", "blue")
+        .style("stroke-dasharray", "3,3")
+        .style("opacity", 0.5)
+        .attr("y1", 0)
+        .attr("y2", height);
+
+    // append the y line
+    focus.append("line")
+        .attr("class", "y")
+        .style("stroke", "blue")
+        .style("stroke-dasharray", "3,3")
+        .style("opacity", 0.5)
+        .attr("x1", width)
+        .attr("x2", width);
+
+    // append the circle at the intersection
+    focus.append("circle")
+        .attr("class", "y")
+        .style("fill", "none")
+        .style("stroke", "firebrick")
+        .attr("r", 4);
+
+    // place the value at the intersection
+    focus.append("text")
+        .attr("class", "y1")
+        .style("stroke", "white")
+        .style("stroke-width", "3.5px")
+        .style("opacity", 0.8)
+        .attr("dx", 8)
+        .attr("dy", "-.3em");
+    focus.append("text")
+        .attr("class", "y2")
+        .attr("dx", 8)
+        .attr("dy", "-.3em");
+
+    // place the date at the intersection
+    focus.append("text")
+        .attr("class", "y3")
+        .style("stroke", "white")
+        .style("stroke-width", "3.5px")
+        .style("opacity", 0.8)
+        .attr("dx", 8)
+        .attr("dy", "1em");
+    focus.append("text")
+        .attr("class", "y4")
+        .attr("dx", 8)
+        .attr("dy", "1em");
+    
+    // append the rectangle to capture mouse
+    svg.append("rect")
+        .attr("width", width)
+        .attr("height", height)
+        .style("fill", "none")
+        .style("pointer-events", "all")
+        .on("mouseover", function() { focus.style("display", null); })
+        .on("mouseout", function() { focus.style("display", "none"); })
+        .on("mousemove", mousemove);
+
+    function mousemove() {
+		var x0 = x.invert(d3.mouse(this)[0]),
+		    i = bisectDate(data, x0, 1),
+		    d0 = data[i - 1],
+		    d1 = data[i],
+		    d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+
+		focus.select("circle.y")
+		    .attr("transform",
+		          "translate(" + x(d.date) + "," +
+		                         y(d.data1) + ")");
+
+		focus.select("text.y1")
+		    .attr("transform",
+		          "translate(" + x(d.date) + "," +
+		                         y(d.data1) + ")")
+		    .text(d.data1);
+
+		focus.select("text.y2")
+		    .attr("transform",
+		          "translate(" + x(d.date) + "," +
+		                         y(d.data1) + ")")
+		    .text(d.data1);
+
+		focus.select("text.y3")
+		    .attr("transform",
+		          "translate(" + x(d.date) + "," +
+		                         y(d.data1) + ")")
+		    .text(formatDate(d.date));
+
+		focus.select("text.y4")
+		    .attr("transform",
+		          "translate(" + x(d.date) + "," +
+		                         y(d.data1) + ")")
+		    .text(formatDate(d.date));
+
+		focus.select(".x")
+		    .attr("transform",
+		          "translate(" + x(d.date) + "," +
+		                         y(d.data1) + ")")
+		               .attr("y2", height - y(d.data1));
+
+		focus.select(".y")
+		    .attr("transform",
+		          "translate(" + width * -1 + "," +
+		                         y(d.data1) + ")")
+		               .attr("x2", width + width);
+	}
+
+});
+
+
+
+// Get the data
+d3.csv("CHXRSA.csv", function(error, data) {
+    data.forEach(function(d) {
+        d.date = parseDate(d.date);
+        d.data2 = +d.data2;
+    });
+
+    // Scale the range of the data
+    x.domain(d3.extent(data, function(d) { return d.date; }));
+    y_two.domain([d3.min(data, function(d) { return d.data2; }), 
+        d3.max(data, function(d) { return d.data2; })]);
+
+    var dataFiltered = data;
+
+    lineSvg.append("path")
+        .data(data)
+        .attr("class", "line")
+        .attr("d", valueline_2(data))
+ 
+    lineSvg.append("path")
+        .data(data)
+        .attr("class", "line")
+        .attr("d", valueline_corr_2(dataFiltered))
+        .style('stroke','firebrick');
+
+    console.log(y(0))
+    console.log(y(300))
+
+    // Add the X Axis
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + 400 + ")")
+        .call(xAxis);
+
+    // Add the Y Axis
+    svg.append("g")
+        .attr("class", "y axis")
+        .attr("transform", "translate(0," + 0+ ")")
+        .call(yAxis2);
+
+
+});
+
+
+
+// Get the data
+d3.csv("CHXRSA.csv", function(error, data) {
+    data.forEach(function(d) {
+        d.date = parseDate(d.date);
+        d.data3 = +d.data3;
+    });
+
+    // Scale the range of the data
+    x.domain(d3.extent(data, function(d) { return d.date; }));
+    y_three.domain([d3.min(data, function(d) { return d.data3; }), 
+        d3.max(data, function(d) { return d.data3; })]);
+
+    var dataFiltered = data;
+
+    lineSvg.append("path")
+        .data(data)
+        .attr("class", "line")
+        .attr("d", valueline_3(data))
+ 
+    lineSvg.append("path")
+        .data(data)
+        .attr("class", "line")
+        .attr("d", valueline_corr_3(dataFiltered))
+        .style('stroke','coral');
+
+    console.log(y(0))
+    console.log(y(300))
+
+    // Add the X Axis
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + 500 + ")")
+        .call(xAxis);
+
+    // Add the Y Axis
+    svg.append("g")
+        .attr("class", "y axis")
+        .attr("transform", "translate(0," + 0+ ")")
+        .call(yAxis3);
+
+
+});
