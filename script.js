@@ -11,52 +11,49 @@ var parseDate = d3.time.format("%d-%b-%y").parse,
 
 // Set the ranges
 var x = d3.time.scale().range([0, width]);
-var y = d3.scale.linear().range([300, 0]);
-var y_two = d3.scale.linear().range([400, 300]);
-var y_three = d3.scale.linear().range([500, 400]);
+var y = d3.scale.linear().range([300, 0]); //Range for primary graph
+var y_two = d3.scale.linear().range([425, 325]); //Range for secondary graph 1
+var y_three = d3.scale.linear().range([550, 450]); //Range for secondary graph 2
+//Need to eventually change the ranges so it's not hardcoded
 
 
 // Define the axes
-var xAxis = d3.svg.axis().scale(x)
+var xAxis = d3.svg.axis().scale(x) //shared xAxis for entire graph
     .orient("bottom").ticks(5);
 
 var yAxis = d3.svg.axis().scale(y)
-    .orient("left").ticks(5);
+    .orient("left").ticks(5); //yAxis for primary graph
 
 var yAxis2 = d3.svg.axis().scale(y_two)
-    .orient("left").ticks(5);
+    .orient("left").ticks(5); //yAxis for secondary graph 1
 
 var yAxis3 = d3.svg.axis().scale(y_three)
-    .orient("left").ticks(5);
+    .orient("left").ticks(5); //yAxis for secondary graph 2
 
 // Define the line/*
+
+//Main line for primary graph (steelblue)
 var valueline_1 = d3.svg.line()
     .x(function(d) { return x(d.date); })
     .y(function(d) {return y(d.data1); })
 
-var valueline_corr_1_1 = d3.svg.line()
+//Highlighting correlated areas for primary graph (firebrick)
+var valueline_corr_1 = d3.svg.line()
     .x(function(d) { 
             return x(d.date); })
     .y(function(d) {
             return y(d.data1); })
     .defined(function(d) { 
-        if(d.flag==1){
+        if(d.flag>0){
             return d; }})
 
-var valueline_corr_1_2 = d3.svg.line()
-    .x(function(d) { 
-            return x(d.date); })
-    .y(function(d) {
-            return y(d.data1); })
-    .defined(function(d) { 
-        if(d.flag==2){
-            return d; }})
-
+//Main line for secondary graph 1 (steelblue)
 var valueline_2 = d3.svg.line()
     .x(function(d) {return x(d.date); })
     .y(function(d) {
         return y_two(d.data2); })
 
+//Highlighting correlated areas for secondary graph 1 (firebrick)
 var valueline_corr_2 = d3.svg.line()
     .x(function(d) { 
             return x(d.date); })
@@ -65,12 +62,14 @@ var valueline_corr_2 = d3.svg.line()
     .defined(function(d) { 
         if(d.flag==1){
             return d; }})
-   
+
+//Main line for secondary graph 2 (steelblue)
 var valueline_3 = d3.svg.line()
     .x(function(d) {return x(d.date); })
     .y(function(d) {
         return y_three(d.data3); })
 
+//Highlighting correlated areas for secondary graph 2 (firebrick)
 var valueline_corr_3 = d3.svg.line()
     .x(function(d) { 
             return x(d.date); })
@@ -95,66 +94,37 @@ var lineSvg = svg.append("g");
 var focus = svg.append("g") 
     .style("display", "none");
 
-// Get the data
+//Graphing Primary Graph 1
 d3.csv("CHXRSA.csv", function(error, data) {
     data.forEach(function(d) {
+        //Not entirely sure what this does, copied from origianl graph - Saurabh
         d.date = parseDate(d.date);
         d.data1= +d.data1;
     });
 
     // Scale the range of the data
+    // Sets the axes as well
     x.domain(d3.extent(data, function(d) { return d.date; }));
     y.domain([d3.min(data, function(d) { return d.data1; }), 
         d3.max(data, function(d) { return d.data1; })]);
 
-    var dataFiltered = data;
-
-
-
-    // Add the valueline path.
+    // Add all the data .
     lineSvg.append("path")
         .data(data)
         .attr("class", "line")
-        .attr("d", valueline_1(data));/*
-        .style('fill',function(data){
-            return (data.close > 100) ? 'red' : 'blue';
-        });*/
+        .attr("d", valueline_1(data))
 
-    // Add the valueline path.
+
+    // Add the correlated data
     lineSvg.append("path")
         .data(data)
         .attr("class", "line")
-        .attr("d", valueline_corr_1_1(dataFiltered))
+        .attr("d", valueline_corr_1(data))
         .style('stroke','firebrick');
 
-    // Add the valueline path.
-    lineSvg.append("path")
-        .data(data)
-        .attr("class", "line")
-        .attr("d", valueline_corr_1_2(dataFiltered))
-        .style('stroke','coral');
 
-
-    svg.append("linearGradient")
-      .data(data)
-      .attr("id", 'line-gradient')
-      .attr("gradientUnits", "userSpaceOnUse")
-      .attr("x1", -300).attr("y1", 0)
-      .attr("x2",300).attr("y2", 0)
-      .selectAll("stop")                      
-        .data([                             
-            {offset: "0%", color: "red"},       
-            {offset: "25%", color: "red"},  
-            {offset: "25%", color: "black"},        
-            {offset: "75%", color: "black"},        
-            {offset: "75%", color: "lawngreen"},    
-            {offset: "100%", color: "lawngreen"}    
-        ])                  
-    .enter().append("stop")         
-        .attr("offset", function(d) { return d.offset; })   
-        .attr("stop-color", function(d) { return d.color; });   
-
-
+    /*Everything from here to the end of function I'm not sure how it works
+    I got it all from the online tutorial */
 
     // Add the X Axis
     svg.append("g")
@@ -281,7 +251,7 @@ d3.csv("CHXRSA.csv", function(error, data) {
 
 
 
-// Get the data
+//Graphing Secondary Graph 1
 d3.csv("CHXRSA.csv", function(error, data) {
     data.forEach(function(d) {
         d.date = parseDate(d.date);
@@ -289,30 +259,29 @@ d3.csv("CHXRSA.csv", function(error, data) {
     });
 
     // Scale the range of the data
+    // Sets the axes as well
     x.domain(d3.extent(data, function(d) { return d.date; }));
     y_two.domain([d3.min(data, function(d) { return d.data2; }), 
         d3.max(data, function(d) { return d.data2; })]);
 
-    var dataFiltered = data;
-
+    // Add all the data .
     lineSvg.append("path")
         .data(data)
         .attr("class", "line")
         .attr("d", valueline_2(data))
  
+    // Add correlated data .
     lineSvg.append("path")
         .data(data)
         .attr("class", "line")
-        .attr("d", valueline_corr_2(dataFiltered))
+        .attr("d", valueline_corr_2(data))
         .style('stroke','firebrick');
 
-    console.log(y(0))
-    console.log(y(300))
 
     // Add the X Axis
     svg.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + 400 + ")")
+        .attr("transform", "translate(0," + 425 + ")")
         .call(xAxis);
 
     // Add the Y Axis
@@ -326,7 +295,7 @@ d3.csv("CHXRSA.csv", function(error, data) {
 
 
 
-// Get the data
+//Graphing Secondary Graph 2
 d3.csv("CHXRSA.csv", function(error, data) {
     data.forEach(function(d) {
         d.date = parseDate(d.date);
@@ -334,30 +303,28 @@ d3.csv("CHXRSA.csv", function(error, data) {
     });
 
     // Scale the range of the data
+    // Sets the axes as well
     x.domain(d3.extent(data, function(d) { return d.date; }));
     y_three.domain([d3.min(data, function(d) { return d.data3; }), 
         d3.max(data, function(d) { return d.data3; })]);
 
-    var dataFiltered = data;
-
+    //Making main graph
     lineSvg.append("path")
         .data(data)
         .attr("class", "line")
         .attr("d", valueline_3(data))
  
+    //Making correlated data sets
     lineSvg.append("path")
         .data(data)
         .attr("class", "line")
-        .attr("d", valueline_corr_3(dataFiltered))
-        .style('stroke','coral');
-
-    console.log(y(0))
-    console.log(y(300))
+        .attr("d", valueline_corr_3(data))
+        .style('stroke','firebrick');
 
     // Add the X Axis
     svg.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + 500 + ")")
+        .attr("transform", "translate(0," + 550 + ")")
         .call(xAxis);
 
     // Add the Y Axis
