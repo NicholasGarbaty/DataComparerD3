@@ -1,7 +1,7 @@
 
 // Set the dimensions of the canvas / graph
-var margin = {top: 30, right: 20, bottom: 30, left: 50},
-    width = 600 - margin.left - margin.right,
+var margin = {top: 30, right: 400, bottom: 30, left: 50},
+    width = 1000 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
 // Parse the date / time
@@ -34,7 +34,8 @@ var yAxis3 = d3.svg.axis().scale(y_three)
 
 //Main line for primary graph (steelblue)
 var valueline_1 = d3.svg.line()
-    .x(function(d) { return x(d.date); })
+    .x(function(d) { 
+        return x(d.date); })
     .y(function(d) {return y(d.data1); })
 
 //Highlighting correlated areas for primary graph (firebrick)
@@ -44,7 +45,7 @@ var valueline_corr_1 = d3.svg.line()
     .y(function(d) {
             return y(d.data1); })
     .defined(function(d) { 
-        if(d.flag>0){
+        if(d.flag1>0 | d.flag2>0){
             return d; }})
 
 //Main line for secondary graph 1 (steelblue)
@@ -60,7 +61,7 @@ var valueline_corr_2 = d3.svg.line()
     .y(function(d) {
             return y_two(d.data2); })
     .defined(function(d) { 
-        if(d.flag==1){
+        if(d.flag1==1){
             return d; }})
 
 //Main line for secondary graph 2 (steelblue)
@@ -76,7 +77,7 @@ var valueline_corr_3 = d3.svg.line()
     .y(function(d) {
             return y_three(d.data3); })
     .defined(function(d) { 
-        if(d.flag==2){
+        if(d.flag2==1){
             return d; }})
 
 
@@ -87,15 +88,30 @@ var svg = d3.select("body")
         .attr("height", height + margin.top + margin.bottom)
     .append("g")
         .attr("transform", 
-              "translate(" + margin.left + "," + margin.top + ")");
+              "translate(" + margin.left + "," + margin.top + ")")  
+    .attr("fill", "gray");
 
 var lineSvg = svg.append("g"); 
 
 var focus = svg.append("g") 
     .style("display", "none");
 
+var bardata = [180];
+var yScale = d3.scale.linear()
+        .domain([0, d3.max(bardata)])
+        .range([0, 300])
+
+var yScale_secondary = d3.scale.linear()
+        .domain([0, d3.max(bardata)])
+        .range([0, 100])
+
+var height = 400,
+    width = 600,
+    barWidth = 50,
+    barOffset = 5;
+
 //Graphing Primary Graph 1
-d3.csv("CHXRSA.csv", function(error, data) {
+d3.csv("fred_sf.csv", function(error, data) {
     data.forEach(function(d) {
         //Not entirely sure what this does, copied from origianl graph - Saurabh
         d.date = parseDate(d.date);
@@ -107,6 +123,9 @@ d3.csv("CHXRSA.csv", function(error, data) {
     x.domain(d3.extent(data, function(d) { return d.date; }));
     y.domain([d3.min(data, function(d) { return d.data1; }), 
         d3.max(data, function(d) { return d.data1; })]);
+
+    x(parseDate('1-Aug-16'))
+  
 
     // Add all the data .
     lineSvg.append("path")
@@ -121,7 +140,6 @@ d3.csv("CHXRSA.csv", function(error, data) {
         .attr("class", "line")
         .attr("d", valueline_corr_1(data))
         .style('stroke','firebrick');
-
 
     /*Everything from here to the end of function I'm not sure how it works
     I got it all from the online tutorial */
@@ -199,60 +217,60 @@ d3.csv("CHXRSA.csv", function(error, data) {
         .on("mousemove", mousemove);
 
     function mousemove() {
-		var x0 = x.invert(d3.mouse(this)[0]),
-		    i = bisectDate(data, x0, 1),
-		    d0 = data[i - 1],
-		    d1 = data[i],
-		    d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+        var x0 = x.invert(d3.mouse(this)[0]),
+            i = bisectDate(data, x0, 1),
+            d0 = data[i - 1],
+            d1 = data[i],
+            d = x0 - d0.date > d1.date - x0 ? d1 : d0;
 
-		focus.select("circle.y")
-		    .attr("transform",
-		          "translate(" + x(d.date) + "," +
-		                         y(d.data1) + ")");
+        focus.select("circle.y")
+            .attr("transform",
+                  "translate(" + x(d.date) + "," +
+                                 y(d.data1) + ")");
 
-		focus.select("text.y1")
-		    .attr("transform",
-		          "translate(" + x(d.date) + "," +
-		                         y(d.data1) + ")")
-		    .text(d.data1);
+        focus.select("text.y1")
+            .attr("transform",
+                  "translate(" + x(d.date) + "," +
+                                 y(d.data1) + ")")
+            .text(d.data1);
 
-		focus.select("text.y2")
-		    .attr("transform",
-		          "translate(" + x(d.date) + "," +
-		                         y(d.data1) + ")")
-		    .text(d.data1);
+        focus.select("text.y2")
+            .attr("transform",
+                  "translate(" + x(d.date) + "," +
+                                 y(d.data1) + ")")
+            .text(d.data1);
 
-		focus.select("text.y3")
-		    .attr("transform",
-		          "translate(" + x(d.date) + "," +
-		                         y(d.data1) + ")")
-		    .text(formatDate(d.date));
+        focus.select("text.y3")
+            .attr("transform",
+                  "translate(" + x(d.date) + "," +
+                                 y(d.data1) + ")")
+            .text(formatDate(d.date));
 
-		focus.select("text.y4")
-		    .attr("transform",
-		          "translate(" + x(d.date) + "," +
-		                         y(d.data1) + ")")
-		    .text(formatDate(d.date));
+        focus.select("text.y4")
+            .attr("transform",
+                  "translate(" + x(d.date) + "," +
+                                 y(d.data1) + ")")
+            .text(formatDate(d.date));
 
-		focus.select(".x")
-		    .attr("transform",
-		          "translate(" + x(d.date) + "," +
-		                         y(d.data1) + ")")
-		               .attr("y2", height - y(d.data1));
+        focus.select(".x")
+            .attr("transform",
+                  "translate(" + x(d.date) + "," +
+                                 y(d.data1) + ")")
+                       .attr("y2",  height - y(d.data1));
 
-		focus.select(".y")
-		    .attr("transform",
-		          "translate(" + width * -1 + "," +
-		                         y(d.data1) + ")")
-		               .attr("x2", width + width);
-	}
+        focus.select(".y")
+            .attr("transform",
+                  "translate(" + width * -1 + "," +
+                                 y(d.data1) + ")")
+                       .attr("x2", width + width);
+    }
 
 });
 
 
 
 //Graphing Secondary Graph 1
-d3.csv("CHXRSA.csv", function(error, data) {
+d3.csv("fred_sf.csv", function(error, data) {
     data.forEach(function(d) {
         d.date = parseDate(d.date);
         d.data2 = +d.data2;
@@ -290,13 +308,45 @@ d3.csv("CHXRSA.csv", function(error, data) {
         .attr("transform", "translate(0," + 0+ ")")
         .call(yAxis2);
 
+//For Loop to Add Transparent Bars
+var startBar;
+var endBar;
+var i=1;
+   data.forEach(function(d) {
+        if(d.flag1==(i % 2)){
+            if((i % 2)==1){
+                startBar=d.date;
 
+            }
+            else{
+                endBar=d.date;
+                    lineSvg.append('g')
+            .attr('width', width)
+            .attr('height', height)
+            .selectAll('rect').data(bardata)
+            .enter().append('rect')
+                .style('fill', 'firebrick')
+                .attr('width', x(endBar)-x(startBar) )
+                .attr('height', function(d) {
+                    return yScale_secondary(d);
+                })
+                .attr('x', function(d,i) {
+                    return x(startBar);
+                })
+                .attr('y', function(d) {
+                    return 325;
+                })
+                 .style("opacity", 0.125);   
+            }
+            i=i+1
+        }
+    });
 });
 
 
 
 //Graphing Secondary Graph 2
-d3.csv("CHXRSA.csv", function(error, data) {
+d3.csv("fred_sf.csv", function(error, data) {
     data.forEach(function(d) {
         d.date = parseDate(d.date);
         d.data3 = +d.data3;
@@ -334,4 +384,81 @@ d3.csv("CHXRSA.csv", function(error, data) {
         .call(yAxis3);
 
 
+    //For Loop to Add Transparent Bars
+    var startBar;
+    var endBar;
+    var i=1;
+    data.forEach(function(d) {
+        if(d.flag2==(i % 2)){
+            if((i % 2)==1){
+                startBar=d.date;
+
+            }
+            else{
+                endBar=d.date;
+                    lineSvg.append('g')
+            .attr('width', width)
+            .attr('height', height)
+            .selectAll('rect').data(bardata)
+            .enter().append('rect')
+                .style('fill', 'firebrick')
+                .attr('width', x(endBar)-x(startBar) )
+                .attr('height', function(d) {
+                    return yScale_secondary(d);
+                })
+                .attr('x', function(d,i) {
+                    return x(startBar);
+                })
+                .attr('y', function(d) {
+                    return 450;
+                })
+                 .style("opacity", 0.125);   
+            }
+            i=i+1
+        }
+    });
+
+
 });
+
+svg.append("text")
+            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+            .attr("transform", "translate("+ 625 +","+150+")")  // text is drawn off the screen top left, move down and out and rotate
+            .text("SF Home Price Index");
+
+
+svg.append("text")
+            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+            .attr("transform", "translate("+ 625 +","+375+")")  // text is drawn off the screen top left, move down and out and rotate
+            .text("UR");
+
+svg.append("text")
+            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+            .attr("transform", "translate("+ 625 +","+500+")")  // text is drawn off the screen top left, move down and out and rotate
+            .text("SF Tech Pulse");
+
+svg.style('background', '#C9D7D6')
+svg.style('fill', '#536870')
+
+
+/*
+DASHED LINE TEST
+    lineSvg.append('g')
+        .append('line')
+        .attr('x1',x(parseDate('1-Feb-09')))
+        .attr('y1', y_two(32))
+        .attr('x2',x(parseDate('1-Feb-09')))
+        .attr('y2', 425)
+        .attr("stroke-width", 1)
+        .attr("stroke", "firebrick")
+        .style("stroke-dasharray", ("3, 3")) ;
+
+    lineSvg.append('g')
+        .append('line')
+        .attr('x1',x(parseDate('1-Mar-11')))
+        .attr('y1', y_two(32))
+        .attr('x2',x(parseDate('1-Mar-11')))
+        .attr('y2', 425)
+        .attr("stroke-width", 1)
+        .attr("stroke", "firebrick")
+        .style("stroke-dasharray", ("3, 3")) ;*/
