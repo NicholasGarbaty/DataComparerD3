@@ -1,4 +1,3 @@
-
 // Set the dimensions of the canvas / graph
 var margin = {top: 30, right: 20, bottom: 30, left: 50},
     width = 600 - margin.left - margin.right,
@@ -294,7 +293,6 @@ d3.csv("CHXRSA.csv", function(error, data) {
 });
 
 
-
 //Graphing Secondary Graph 2
 d3.csv("CHXRSA.csv", function(error, data) {
     data.forEach(function(d) {
@@ -334,4 +332,11 @@ d3.csv("CHXRSA.csv", function(error, data) {
         .call(yAxis3);
 
 
+});
+
+$(function () {
+    $('#testme').on('click', function () {
+        var text = $('#lookup');
+        text.val(text.val() + ' after clicking');    
+    });
 });

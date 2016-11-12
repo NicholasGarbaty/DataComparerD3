@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
 <meta charset="utf-8">
 <style> /* set the CSS */
   <link rel="stylesheet" href="_/base.css">
@@ -34,4 +37,8 @@ path {
 
 <script src="script.js">
 </script>
+<input id="lookup" type="text" onkeydown="if (event.keyCode == 13 || event.which == 13) { location='http://www.google.com/search?q=' + encodeURIComponent(document.getElementById('lookup').value);}" />
+<input type="button" id="searchme" value="Go" onclick=" { location='http://www.google.com/search?q=' + encodeURIComponent(document.getElementById('lookup').value);}">
+<input type="button" id="testme" value="test">
+
 </body>
