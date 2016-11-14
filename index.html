@@ -37,8 +37,12 @@ path {
 
 <script src="script.js">
 </script>
-<input id="lookup" type="text" onkeydown="if (event.keyCode == 13 || event.which == 13) { location='http://www.google.com/search?q=' + encodeURIComponent(document.getElementById('lookup').value);}" />
-<input type="button" id="searchme" value="Go" onclick=" { location='http://www.google.com/search?q=' + encodeURIComponent(document.getElementById('lookup').value);}">
-<input type="button" id="testme" value="test">
+<form action="http://google.com/search" target="_blank">
+        <input id="lookup" type="text" name="q">
+        <input type="submit" value="Go">
+        <input type="button" id="testme" value="test">
+    </form>
+
+
 
 </body>
