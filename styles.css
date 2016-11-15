@@ -3,3 +3,32 @@ p {
 	font-family: Verdana;
 	color: orange;
 }
+
+#SecondaryGraph1_2:hover {
+	opacity: .5;
+	cursor: pointer;
+}
+#SecondaryGraph1_4:hover {
+	opacity: .5;
+	cursor: pointer;
+}#SecondaryGraph1_6:hover {
+	opacity: .5;
+	cursor: pointer;
+}#SecondaryGraph1_8:hover {
+	opacity: .5;
+	cursor: pointer;
+}
+#SecondaryGraph2_2:hover {
+	opacity: .5;
+	cursor: pointer;
+}
+#SecondaryGraph2_4:hover {
+	opacity: .5;
+	cursor: pointer;
+}#SecondaryGraph2_6:hover {
+	opacity: .5;
+	cursor: pointer;
+}#SecondaryGraph2_8:hover {
+	opacity: .5;
+	cursor: pointer;
+}

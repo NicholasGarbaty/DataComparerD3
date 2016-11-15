@@ -209,7 +209,7 @@ d3.csv("fred_sf.csv", function(error, data) {
     // append the rectangle to capture mouse
     svg.append("rect")
         .attr("width", width)
-        .attr("height", height)
+        .attr("height", 300)
         .style("fill", "none")
         .style("pointer-events", "all")
         .on("mouseover", function() { focus.style("display", null); })
@@ -400,10 +400,11 @@ d3.csv("fred_sf.csv", function(error, data) {
                     lineSvg.append('g')
             .attr('width', width)
             .attr('height', height)
+            .attr('id','SecondaryGraph2_'+i)
             .selectAll('rect').data(bardata)
             .enter().append('rect')
                 .style('fill', 'firebrick')
-                .attr('id','SecondaryGraph2_'+i)
+                
                 .attr('width', x(endBar)-x(startBar) )
                 .attr('height', function(d) {
                     return yScale_secondary(d);
@@ -447,8 +448,51 @@ svg.style('fill', '#536870')
 
 
 $(function () {
-    $('#testme').on('click', function () {
+    $('#SecondaryGraph1_2').on('click', function () {
         var text = $('#lookup');
         text.val(text.val() + ' after clicking');    
     });
 });
+$(function () {
+    $('#SecondaryGraph1_4').on('click', function () {
+        var text = $('#lookup');
+        text.val(text.val() + ' after clicking');    
+    });
+});
+$(function () {
+    $('#SecondaryGraph1_6').on('click', function () {
+        var text = $('#lookup');
+        text.val(text.val() + ' after clicking');    
+    });
+});
+$(function () {
+    $('#SecondaryGraph1_8').on('click', function () {
+        var text = $('#lookup');
+        text.val(text.val() + ' after clicking');    
+    });
+});
+$(function () {
+    $('#SecondaryGraph2_2').on('click', function () {
+        var text = $('#lookup');
+        text.val(text.val() + ' after clicking');    
+    });
+});
+$(function () {
+    $('#SecondaryGraph2_4').on('click', function () {
+        var text = $('#lookup');
+        text.val(text.val() + ' after clicking');    
+    });
+});
+$(function () {
+    $('#SecondaryGraph2_6').on('click', function () {
+        var text = $('#lookup');
+        text.val(text.val() + ' after clicking');    
+    });
+});
+$(function () {
+    $('#SecondaryGraph2_8').on('click', function () {
+        var text = $('#lookup');
+        text.val(text.val() + ' after clicking');    
+    });
+});
+
