@@ -1,3 +1,4 @@
+
 // Set the dimensions of the canvas / graph
 var margin = {top: 30, right: 400, bottom: 30, left: 50},
     width = 1000 - margin.left - margin.right,
@@ -307,11 +308,11 @@ d3.csv("fred_sf.csv", function(error, data) {
         .attr("transform", "translate(0," + 0+ ")")
         .call(yAxis2);
 
-//For Loop to Add Transparent Bars
-var startBar;
-var endBar;
-var i=1;
-   data.forEach(function(d) {
+    //For Loop to Add Transparent Bars
+    var startBar;
+    var endBar;
+    var i=1;
+    data.forEach(function(d) {
         if(d.flag1==(i % 2)){
             if((i % 2)==1){
                 startBar=d.date;
@@ -322,6 +323,7 @@ var i=1;
                     lineSvg.append('g')
             .attr('width', width)
             .attr('height', height)
+            .attr('id','SecondaryGraph1_'+i)
             .selectAll('rect').data(bardata)
             .enter().append('rect')
                 .style('fill', 'firebrick')
@@ -335,12 +337,13 @@ var i=1;
                 .attr('y', function(d) {
                     return 325;
                 })
-                 .style("opacity", 0.125);   
+                 .style("opacity", 0.1875);   
             }
             i=i+1
         }
     });
 });
+
 
 
 //Graphing Secondary Graph 2
@@ -382,7 +385,6 @@ d3.csv("fred_sf.csv", function(error, data) {
         .call(yAxis3);
 
 
-<<<<<<< HEAD
     //For Loop to Add Transparent Bars
     var startBar;
     var endBar;
@@ -401,6 +403,7 @@ d3.csv("fred_sf.csv", function(error, data) {
             .selectAll('rect').data(bardata)
             .enter().append('rect')
                 .style('fill', 'firebrick')
+                .attr('id','SecondaryGraph2_'+i)
                 .attr('width', x(endBar)-x(startBar) )
                 .attr('height', function(d) {
                     return yScale_secondary(d);
@@ -411,7 +414,7 @@ d3.csv("fred_sf.csv", function(error, data) {
                 .attr('y', function(d) {
                     return 450;
                 })
-                 .style("opacity", 0.125);   
+                 .style("opacity", 0.1875);   
             }
             i=i+1
         }
@@ -420,6 +423,9 @@ d3.csv("fred_sf.csv", function(error, data) {
 
 });
 
+
+
+//Axes Information
 svg.append("text")
             .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
             .attr("transform", "translate("+ 625 +","+150+")")  // text is drawn off the screen top left, move down and out and rotate
@@ -440,35 +446,9 @@ svg.style('background', '#C9D7D6')
 svg.style('fill', '#536870')
 
 
-/*
-DASHED LINE TEST
-    lineSvg.append('g')
-        .append('line')
-        .attr('x1',x(parseDate('1-Feb-09')))
-        .attr('y1', y_two(32))
-        .attr('x2',x(parseDate('1-Feb-09')))
-        .attr('y2', 425)
-        .attr("stroke-width", 1)
-        .attr("stroke", "firebrick")
-        .style("stroke-dasharray", ("3, 3")) ;
-
-    lineSvg.append('g')
-        .append('line')
-        .attr('x1',x(parseDate('1-Mar-11')))
-        .attr('y1', y_two(32))
-        .attr('x2',x(parseDate('1-Mar-11')))
-        .attr('y2', 425)
-        .attr("stroke-width", 1)
-        .attr("stroke", "firebrick")
-        .style("stroke-dasharray", ("3, 3")) ;*/
-=======
-});
-
-
 $(function () {
     $('#testme').on('click', function () {
         var text = $('#lookup');
         text.val(text.val() + ' after clicking');    
     });
 });
->>>>>>> origin/master
