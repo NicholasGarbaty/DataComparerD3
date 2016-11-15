@@ -1,4 +1,3 @@
-
 // Set the dimensions of the canvas / graph
 var margin = {top: 30, right: 400, bottom: 30, left: 50},
     width = 1000 - margin.left - margin.right,
@@ -344,7 +343,6 @@ var i=1;
 });
 
 
-
 //Graphing Secondary Graph 2
 d3.csv("fred_sf.csv", function(error, data) {
     data.forEach(function(d) {
@@ -384,6 +382,7 @@ d3.csv("fred_sf.csv", function(error, data) {
         .call(yAxis3);
 
 
+<<<<<<< HEAD
     //For Loop to Add Transparent Bars
     var startBar;
     var endBar;
@@ -462,3 +461,14 @@ DASHED LINE TEST
         .attr("stroke-width", 1)
         .attr("stroke", "firebrick")
         .style("stroke-dasharray", ("3, 3")) ;*/
+=======
+});
+
+
+$(function () {
+    $('#testme').on('click', function () {
+        var text = $('#lookup');
+        text.val(text.val() + ' after clicking');    
+    });
+});
+>>>>>>> origin/master
