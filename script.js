@@ -546,49 +546,49 @@ function drawGraph(inputData) {
     $(function () {
         $('#SecondaryGraph1_2').on('click', function () {
             var text = $('#lookup');
-            text.val(text.val() + ' after clicking');    
+            text.val(text.val() + 'unemployment rate, April 2003 through September 2004, San Francisco Home Price Index');    
         });
     });
     $(function () {
         $('#SecondaryGraph1_4').on('click', function () {
             var text = $('#lookup');
-            text.val(text.val() + ' after clicking');    
+            text.val(text.val() + 'unemployment rate, February 2008 through January 2009, San Francisco Home Price Index');    
         });
     });
     $(function () {
         $('#SecondaryGraph1_6').on('click', function () {
             var text = $('#lookup');
-            text.val(text.val() + ' after clicking');    
+            text.val(text.val() + 'unemployment rate, October 2012 through April 2014, San Francisco Home Price Index');    
         });
     });
     $(function () {
         $('#SecondaryGraph1_8').on('click', function () {
             var text = $('#lookup');
-            text.val(text.val() + ' after clicking');    
+            text.val(text.val() + 'unemployment rate, July 2014 through July 2015, San Francisco Home Price Index');    
         });
     });
     $(function () {
         $('#SecondaryGraph2_2').on('click', function () {
             var text = $('#lookup');
-            text.val(text.val() + ' after clicking');    
+            text.val(text.val() + 'San Francisco Tech Pulse, March 1996 through September 1997, San Francisco Home Price Index');    
         });
     });
     $(function () {
         $('#SecondaryGraph2_4').on('click', function () {
             var text = $('#lookup');
-            text.val(text.val() + ' after clicking');    
+            text.val(text.val() + 'San Francisco Tech Pulse, July 1998 through October 2000, San Francisco Home Price Index');    
         });
     });
     $(function () {
         $('#SecondaryGraph2_6').on('click', function () {
             var text = $('#lookup');
-            text.val(text.val() + ' after clicking');    
+            text.val(text.val() + 'San Francisco Tech Pulse, February 2001 through November 2002, San Francisco Home Price Index');    
         });
     });
     $(function () {
         $('#SecondaryGraph2_8').on('click', function () {
             var text = $('#lookup');
-            text.val(text.val() + ' after clicking');    
+            text.val(text.val() + 'San Francisco Tech Pulse, April 2008 through June 2010, San Francisco Home Price Index');    
         });
     });
 
