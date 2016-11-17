@@ -1,5 +1,10 @@
+var SF_Tech_Pulse = {
+    title: 'SF Home Price Index',
+    id: 'SFXRSA'
+};
+
 drawGraph('fred_sf.csv',
-        'SF Home Price Index','UR','SF Tech Pulse')
+        'SF Home Price Index','UR',SF_Tech_Pulse)
 
 function updateData(){
     d3.select("svg").remove();
@@ -525,7 +530,7 @@ function drawGraph(inputData,var1,var2,var3) {
                             $(function () {
                             $(id).on('click', function () {
                                 var text = $('#lookup');
-                                text.val(text.val() + var3+', '+startBar+' through ,' + var1 );
+                                text.val(text.val() + var3.title+', '+startBar+' through ,' + var1 );
                                 });
                         });  
                     }
@@ -555,7 +560,7 @@ function drawGraph(inputData,var1,var2,var3) {
     svg.append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
                 .attr("transform", "translate("+ 625 +","+500+")")  // text is drawn off the screen top left, move down and out and rotate
-                .text(var3)
+                .text(var3.title)
                 .attr("class","graphtitle");
 
     svg.append("text")
@@ -583,7 +588,7 @@ function drawGraph(inputData,var1,var2,var3) {
                 .attr("transform", "translate("+ 625 +","+525+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","graphtitle")
                 .append("a")
-                .attr("xlink:href", "https://fred.stlouisfed.org/series/SFTPGRM157SFRBSF")
+                .attr("xlink:href", "https://fred.stlouisfed.org/series/"+SF_Tech_Pulse.id)
                 .attr("xlink:show", "new")
                 .text("source");
 
