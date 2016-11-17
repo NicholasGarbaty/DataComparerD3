@@ -558,6 +558,35 @@ function drawGraph(inputData,var1,var2,var3) {
                 .text(var3)
                 .attr("class","graphtitle");
 
+    svg.append("text")
+                .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+                .attr("transform", "translate("+ 625 +","+177+")")  // text is drawn off the screen top left, move down and out and rotate
+                .attr("class","graphtitle")
+                .append("a")
+                .attr("xlink:href", "https://fred.stlouisfed.org/series/")
+                .attr("xlink:show", "new")
+                .text("source");
+                
+
+
+    svg.append("text")
+                .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+                .attr("transform", "translate("+ 625 +","+400+")")  // text is drawn off the screen top left, move down and out and rotate
+                .attr("class","graphtitle")
+                .append("a")
+                .attr("xlink:href", "https://fred.stlouisfed.org/series/SANF806UR")
+                .attr("xlink:show", "new")
+                .text("source");
+
+    svg.append("text")
+                .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
+                .attr("transform", "translate("+ 625 +","+525+")")  // text is drawn off the screen top left, move down and out and rotate
+                .attr("class","graphtitle")
+                .append("a")
+                .attr("xlink:href", "https://fred.stlouisfed.org/series/SFTPGRM157SFRBSF")
+                .attr("xlink:show", "new")
+                .text("source");
+
 
     svg.style('background', '#C9D7D6')
     svg.style('fill', '#536870')
