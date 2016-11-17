@@ -1,15 +1,25 @@
-var SF_Tech_Pulse = {
+var SF_Home_Price_Index= {
     title: 'SF Home Price Index',
     id: 'SFXRSA'
 };
 
+var SF_Tech_Pulse = {
+    title: 'SF Tech Pulse',
+    id: 'SFTPGRM157SFRBSF'
+};
+
+var UR = {
+    title: 'UR',
+    id: 'SANF806UR'
+};
+
 drawGraph('fred_sf.csv',
-        'SF Home Price Index','UR',SF_Tech_Pulse)
+        SF_Home_Price_Index, UR,SF_Tech_Pulse)
 
 function updateData(){
     d3.select("svg").remove();
     drawGraph('fred_sf_reordered.csv',
-        'SF Tech Pulse','UR','SF Home Price Index')
+        SF_Tech_Pulse, UR, SF_Home_Price_Index)
 }
 
 function drawGraph(inputData,var1,var2,var3) {
@@ -410,7 +420,7 @@ function drawGraph(inputData,var1,var2,var3) {
                         $(function () {
                             $(id).on('click', function () {
                                 var text = $('#lookup');
-                                text.val(text.val() + var2+', '+startBar+' through ,' + var1 );
+                                text.val(text.val() + var2.title+', '+startBar+' through ,' + var1.title );
         });
     });  
                     }
@@ -530,7 +540,7 @@ function drawGraph(inputData,var1,var2,var3) {
                             $(function () {
                             $(id).on('click', function () {
                                 var text = $('#lookup');
-                                text.val(text.val() + var3.title+', '+startBar+' through ,' + var1 );
+                                text.val(text.val() + var3.title+', '+startBar+' through ,' + var1.title );
                                 });
                         });  
                     }
@@ -547,39 +557,44 @@ function drawGraph(inputData,var1,var2,var3) {
     svg.append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
                 .attr("transform", "translate("+ 625 +","+150+")")  // text is drawn off the screen top left, move down and out and rotate
-                .text(var1)
-                .attr("class","graphtitle");
+                .attr("class","graphtitle")
+                .append("a")
+                .attr("onclick", "updateData()")
+                .text(var1.title);
+                
 
 
     svg.append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
                 .attr("transform", "translate("+ 625 +","+375+")")  // text is drawn off the screen top left, move down and out and rotate
-                .text(var2)
-                .attr("class","graphtitle");
+                .attr("class","graphtitle")
+                .append("a")
+                .attr("onclick", "updateData()")
+                .text(var2.title);
 
     svg.append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
                 .attr("transform", "translate("+ 625 +","+500+")")  // text is drawn off the screen top left, move down and out and rotate
-                .text(var3.title)
-                .attr("class","graphtitle");
+                .attr("class","graphtitle")
+                .append("a")
+                .attr("onclick", "updateData()")
+                .text(var3.title);
 
     svg.append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
                 .attr("transform", "translate("+ 625 +","+177+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","graphtitle")
                 .append("a")
-                .attr("xlink:href", "https://fred.stlouisfed.org/series/")
+                .attr("xlink:href", "https://fred.stlouisfed.org/series/"+var1.id)
                 .attr("xlink:show", "new")
                 .text("source");
                 
-
-
     svg.append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
                 .attr("transform", "translate("+ 625 +","+400+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","graphtitle")
                 .append("a")
-                .attr("xlink:href", "https://fred.stlouisfed.org/series/SANF806UR")
+                .attr("xlink:href", "https://fred.stlouisfed.org/series/"+var2.id)
                 .attr("xlink:show", "new")
                 .text("source");
 
@@ -588,7 +603,7 @@ function drawGraph(inputData,var1,var2,var3) {
                 .attr("transform", "translate("+ 625 +","+525+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","graphtitle")
                 .append("a")
-                .attr("xlink:href", "https://fred.stlouisfed.org/series/"+SF_Tech_Pulse.id)
+                .attr("xlink:href", "https://fred.stlouisfed.org/series/"+var3.id)
                 .attr("xlink:show", "new")
                 .text("source");
 

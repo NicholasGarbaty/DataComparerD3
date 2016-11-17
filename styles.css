@@ -10,4 +10,5 @@ p {
 }
 .graphtitle {
 	font-family: "Exo 2", "Helvetica Neue", Helvetica, sans-serif;
+	cursor: pointer;
 }
