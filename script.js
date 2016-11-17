@@ -518,44 +518,25 @@ function drawGraph(inputData) {
 
     }
 
-
-
-//Axes Information
-svg.append("text")
-            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-            .attr("transform", "translate("+ 625 +","+150+")")  // text is drawn off the screen top left, move down and out and rotate
-            .text("SF Home Price Index")
-            .attr("class","graphtitle");
-
-
-svg.append("text")
-            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-            .attr("transform", "translate("+ 625 +","+375+")")  // text is drawn off the screen top left, move down and out and rotate
-            .text("UR")
-            .attr("class","graphtitle");
-
-svg.append("text")
-            .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-            .attr("transform", "translate("+ 625 +","+500+")")  // text is drawn off the screen top left, move down and out and rotate
-            .text("SF Tech Pulse")
-            .attr("class","graphtitle");
-
     //Axes Information
     svg.append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
                 .attr("transform", "translate("+ 625 +","+150+")")  // text is drawn off the screen top left, move down and out and rotate
-                .text("SF Home Price Index");
+                .text("SF Home Price Index")
+                .attr("class","graphtitle");
 
 
     svg.append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
                 .attr("transform", "translate("+ 625 +","+375+")")  // text is drawn off the screen top left, move down and out and rotate
-                .text("UR");
+                .text("UR")
+                .attr("class","graphtitle");
 
     svg.append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
                 .attr("transform", "translate("+ 625 +","+500+")")  // text is drawn off the screen top left, move down and out and rotate
-                .text("SF Tech Pulse");
+                .text("SF Tech Pulse")
+                .attr("class","graphtitle");
 
 
     svg.style('background', '#C9D7D6')
