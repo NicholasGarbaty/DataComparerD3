@@ -5,10 +5,21 @@ p {
 }
 
 .corrbars:hover {
-	opacity: .5;
+	opacity: .7;
 	cursor: pointer;
 }
 .graphtitle {
+	fill: #CA7E00;
 	font-family: "Exo 2", "Helvetica Neue", Helvetica, sans-serif;
 	cursor: pointer;
 }
+.graphtitle:hover {
+	text-decoration: underline;
+}
+#wrapper {
+	background-color: #B2C9D9;
+	width: 75%;
+	height: 100%;
+}
+
+

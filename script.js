@@ -98,6 +98,8 @@ function drawGraph(inputData,var1,var2,var3) {
 
     // Adds the svg canvas
     var svg = d3.select("body")
+        .append("div")
+            .attr("id", "wrapper")
         .append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
@@ -174,7 +176,7 @@ function drawGraph(inputData,var1,var2,var3) {
                 .data(data)
                 .attr("class", "line")
                 .attr("d", valueline_corr_1(data))
-                .style('stroke','firebrick');
+                .style('stroke','#FF9000');
 
             var totalLength = path_corr.node().getTotalLength();
 
@@ -301,13 +303,13 @@ function drawGraph(inputData,var1,var2,var3) {
                     .attr("transform",
                           "translate(" + x(d.date) + "," +
                                          y(d.data1) + ")")
-                               .attr("y2",  height - y(d.data1));
+                               .attr("y2",  height + y(d.data1));
 
                 focus.select(".y")
                     .attr("transform",
                           "translate(" + width * -1 + "," +
                                          y(d.data1) + ")")
-                               .attr("x2", width + width);
+                               .attr("x2", width + 550);
             }
 
         });
@@ -351,7 +353,7 @@ function drawGraph(inputData,var1,var2,var3) {
                 .data(data)
                 .attr("class", "line")
                 .attr("d", valueline_corr_2(data))
-                .style('stroke','firebrick');
+                .style('stroke','#FF9000');
 
 
             var totalLength = path_corr.node().getTotalLength();
@@ -401,7 +403,7 @@ function drawGraph(inputData,var1,var2,var3) {
                             .ease('linear')
                             .duration(500)
                             .delay(1000)
-                        .style('fill', 'firebrick')
+                        .style('fill', '#ECB977')
                         .attr('width', x(endBar)-x(startBar) )
                         .attr('height', function(d) {
                             return yScale_secondary(d);
@@ -412,7 +414,7 @@ function drawGraph(inputData,var1,var2,var3) {
                         .attr('y', function(d) {
                             return 325;
                         })
-                         .style("opacity", 0.1875); 
+                         .style("opacity", 0.5); 
 
 
                         console.log(startBar);
@@ -470,7 +472,7 @@ function drawGraph(inputData,var1,var2,var3) {
                 .data(data)
                 .attr("class", "line")
                 .attr("d", valueline_corr_3(data))
-                .style('stroke','firebrick');
+                .style('stroke','#FF9000');
 
             var totalLength = path_corr.node().getTotalLength();
 
@@ -523,7 +525,7 @@ function drawGraph(inputData,var1,var2,var3) {
                             .ease('linear')
                             .duration(500)
                             .delay(1000)
-                            .style('fill', 'forestgreen')
+                            .style('fill', '#C49E47')
                             .attr('width', x(endBar)-x(startBar) )
                             .attr('height', function(d) {
                                 return yScale_secondary(d);
@@ -534,7 +536,7 @@ function drawGraph(inputData,var1,var2,var3) {
                             .attr('y', function(d) {
                                 return 450;
                             })
-                             .style("opacity", 0.1875);   
+                             .style("opacity", 0.5);   
 
                             var id='#SecondaryGraph2_'+i;
                             $(function () {
@@ -556,7 +558,7 @@ function drawGraph(inputData,var1,var2,var3) {
     //Axes Information
     svg.append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("transform", "translate("+ 625 +","+150+")")  // text is drawn off the screen top left, move down and out and rotate
+                .attr("transform", "translate("+ 700 +","+150+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","graphtitle")
                 .append("a")
                 .attr("onclick", "updateData()")
@@ -566,7 +568,7 @@ function drawGraph(inputData,var1,var2,var3) {
 
     svg.append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("transform", "translate("+ 625 +","+375+")")  // text is drawn off the screen top left, move down and out and rotate
+                .attr("transform", "translate("+ 700 +","+375+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","graphtitle")
                 .append("a")
                 .attr("onclick", "updateData()")
@@ -574,7 +576,7 @@ function drawGraph(inputData,var1,var2,var3) {
 
     svg.append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("transform", "translate("+ 625 +","+500+")")  // text is drawn off the screen top left, move down and out and rotate
+                .attr("transform", "translate("+ 700 +","+500+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","graphtitle")
                 .append("a")
                 .attr("onclick", "updateData()")
@@ -582,7 +584,7 @@ function drawGraph(inputData,var1,var2,var3) {
 
     svg.append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("transform", "translate("+ 625 +","+177+")")  // text is drawn off the screen top left, move down and out and rotate
+                .attr("transform", "translate("+ 700 +","+177+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","graphtitle")
                 .append("a")
                 .attr("xlink:href", "https://fred.stlouisfed.org/series/"+var1.id)
@@ -591,7 +593,7 @@ function drawGraph(inputData,var1,var2,var3) {
                 
     svg.append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("transform", "translate("+ 625 +","+400+")")  // text is drawn off the screen top left, move down and out and rotate
+                .attr("transform", "translate("+ 700 +","+400+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","graphtitle")
                 .append("a")
                 .attr("xlink:href", "https://fred.stlouisfed.org/series/"+var2.id)
@@ -600,7 +602,7 @@ function drawGraph(inputData,var1,var2,var3) {
 
     svg.append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("transform", "translate("+ 625 +","+525+")")  // text is drawn off the screen top left, move down and out and rotate
+                .attr("transform", "translate("+ 700 +","+525+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","graphtitle")
                 .append("a")
                 .attr("xlink:href", "https://fred.stlouisfed.org/series/"+var3.id)
