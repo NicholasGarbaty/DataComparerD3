@@ -614,7 +614,7 @@ function drawGraph(inputData,var1,var2,var3) {
                             $(function () {
                             $(id).on('click', function () {
                                 var text = $('#lookup');
-                                text.val(text.val() + var3.title + ' & ' + var1.title + ', '+formatDate(startBar)+' through,'+formatDate(endBar));
+                                text.val("" + var3.title + ' & ' + var1.title + ', '+formatDate(startBar)+' through,'+formatDate(endBar));
                                 });
                         });  
                     }
