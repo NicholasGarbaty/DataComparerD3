@@ -4,6 +4,8 @@ p {
 	color: orange;
 }
 
+
+
 .corrbars:hover {
 	opacity: .7;
 	cursor: pointer;
@@ -23,7 +25,7 @@ p {
 	font-weight: bold;
 }
 .graphtitle {
-	fill: #CA7E00;
+	fill: black;
 	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
 	font-size: 18px;
 }
@@ -39,7 +41,7 @@ p {
 	text-decoration: underline;
 }
 #wrapper {
-	background-color: #DCE8E6;
+	background-color: #EBE7E9;
 	width: 75%;
 	height: 100%;
 }

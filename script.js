@@ -290,7 +290,6 @@ function drawGraph(inputData,var1,var2,var3) {
                 .on("mouseout", function() { focus.style("display", "none"); })
                 .on("mousemove", mousemove);
 
-
             function mousemove() {
                 var x0 = x.invert(d3.mouse(this)[0]),
                     i = bisectDate(data, x0, 1),
@@ -473,10 +472,10 @@ function drawGraph(inputData,var1,var2,var3) {
                     .attr('id','SecondaryGraph1_'+i)
                     .selectAll('rect').data(bardata)
                     .enter().append('rect')
-                                                .transition()
-                            .ease('linear')
-                            .duration(500)
-                            .delay(1000)
+                            .transition()
+                                    .ease('linear')
+                                    .duration(500)
+                                    .delay(1000)
                         .style('fill', '#ECB977')
                         .attr('width', x(endBar)-x(startBar) )
                         .attr('height', function(d) {
@@ -496,7 +495,7 @@ function drawGraph(inputData,var1,var2,var3) {
                             };
                             $(id.id).on('click', function () {
                                 var text = $('#lookup');
-                                text.val(text.val() + id.text);
+                                text.val("" + id.text);
         });
                     }
                     i=i+1
