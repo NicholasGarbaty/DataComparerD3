@@ -1,3 +1,4 @@
+//Three parameters of interest
 var SF_Home_Price_Index= {
     title: 'SF Home Price Index',
     id: 'SFXRSA'
@@ -13,9 +14,11 @@ var UR = {
     id: 'SANF806UR'
 };
 
+//Draws default graph
 drawGraph('primaryHPI.csv',
-        SF_Home_Price_Index, UR,SF_Tech_Pulse)
+        SF_Home_Price_Index, UR,SF_Tech_Pulse);
 
+//Functions to draw situations with different primary graphs
 function primarySFXRSA(){
     d3.select("svg").remove();
     console.log("Primary is HPI")
@@ -37,11 +40,12 @@ function primarySANF806UR(){
          UR,SF_Tech_Pulse, SF_Home_Price_Index)
 }
 
+//Actually draws the graph
 function drawGraph(inputData,var1,var2,var3) {
     // Set the dimensions of the canvas / graph
     var margin = {top: 30, right: 400, bottom: 30, left: 50},
         width = 1000 - margin.left - margin.right,
-        height = 600 - margin.top - margin.bottom;
+        height = 800 - margin.top - margin.bottom;
 
     // Parse the date / time
     var parseDate = d3.time.format("%d-%b-%y").parse,
@@ -125,7 +129,7 @@ function drawGraph(inputData,var1,var2,var3) {
 
     var lineSvg = svg.append("g"); 
 
-    var focus = svg.append("g") 
+    var focus = lineSvg.append("g") 
         .style("display", "none");
 
     var bardata = [180];
@@ -285,47 +289,8 @@ function drawGraph(inputData,var1,var2,var3) {
                 .on("mouseover", function() { focus.style("display", null); })
                 .on("mouseout", function() { focus.style("display", "none"); })
                 .on("mousemove", mousemove);
-//For Loop to Add Transparent Bars
-            var startBar;
-            var endBar;
-            var i=1;
-            data.forEach(function(d) {
-                if(d.flag2==(i % 2)){
-                    if((i % 2)==1){
-                        startBar=d.date;
 
-                    }
-                    else{
-                        endBar=d.date;
-                        lineSvg.append('g')
 
-                            .attr('width', width)
-                            .attr('height', height)
-                            .attr('class', 'corrbarsPrimary')
-                            .attr('id','PrimaryGraph1_'+i)
-                            .selectAll('rect').data(bardata)
-                        .enter()
-                        .append('rect')
-                            .transition()
-                            .ease('linear')
-                            .duration(500)
-                            .delay(1000)
-                            .style('fill', '#ECB977')
-                            .attr('width', x(endBar)-x(startBar) )
-                            .attr('height', function(d) {
-                                return yScale(d);
-                            })
-                            .attr('x', function(d,i) {
-                                return x(startBar);
-                            })
-                            .attr('y', function(d) {
-                                return 0;
-                            })
-                             .style("opacity", 0);   
-                    }
-                    i=i+1
-                }
-            });
             function mousemove() {
                 var x0 = x.invert(d3.mouse(this)[0]),
                     i = bisectDate(data, x0, 1),
@@ -415,8 +380,11 @@ function drawGraph(inputData,var1,var2,var3) {
                           "translate(" + width * -1 + "," +
                                          y(d.data1) + ")")
                                .attr("x2", width + 550);
-            }
 
+            }
+            primaryBars(data,1,1);
+            primaryBars(data,2,1);
+          
         });
 
 
@@ -521,15 +489,14 @@ function drawGraph(inputData,var1,var2,var3) {
                         })
                          .style("opacity", 0.5); 
 
-
-                        console.log(startBar);
-                        var id='#SecondaryGraph1_'+i;
-                        $(function () {
-                            $(id).on('click', function () {
+                        var id={
+                            id: '#SecondaryGraph1_'+i,
+                            text: var2.title + ' & ' + var1.title + ', '+formatDate(startBar)+' through,'+formatDate(endBar)
+                            };
+                            $(id.id).on('click', function () {
                                 var text = $('#lookup');
-                                text.val(text.val() + var2.title + ' & ' + var1.title + ', '+formatDate(startBar)+' through,'+formatDate(endBar));
+                                text.val(text.val() + id.text);
         });
-    });  
                     }
                     i=i+1
                 }
@@ -660,112 +627,100 @@ function drawGraph(inputData,var1,var2,var3) {
 
     }
 
-    //Axes Information
+
+    //Calls the draw title function
+    drawTitle(var1,0);
+    drawTitle(var2,325);
+    drawTitle(var3,450);
+
+    //Draw the title
     svg.append("text")
-                .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("transform", "translate("+ 700 +","+150+")")  // text is drawn off the screen top left, move down and out and rotate
-                .attr("class","graphtitle")
-                .append("a")
-                .attr("onclick", "primary"+var1.id+"()")
-                .text(var1.title);
-                
+        .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
+        .attr("transform", "translate("+ 0+","+-30+")")  // text is drawn off the screen top left, move down and out and rotate
+        .attr("class","overalltitle")
+        .text("Comparallel");
 
-
-    svg.append("text")
-                .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("transform", "translate("+ 700 +","+375+")")  // text is drawn off the screen top left, move down and out and rotate
-                .attr("class","graphtitle")
-                .append("a")
-                .attr("onclick", "primary"+var2.id+"()")
-                .text(var2.title);
-
-    svg.append("text")
-                .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("transform", "translate("+ 700 +","+500+")")  // text is drawn off the screen top left, move down and out and rotate
-                .attr("class","graphtitle")
-                .append("a")
-                .attr("onclick", "primary"+var3.id+"()")
-                .text(var3.title);
-
-    svg.append("text")
-                .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("transform", "translate("+ 700 +","+177+")")  // text is drawn off the screen top left, move down and out and rotate
-                .attr("class","graphsubtitle")
-                .append("a")
-                .attr("xlink:href", "https://fred.stlouisfed.org/series/"+var1.id)
-                .attr("xlink:show", "new")
-                .text("source");
-                
-    svg.append("text")
-                .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("transform", "translate("+ 700 +","+400+")")  // text is drawn off the screen top left, move down and out and rotate
-                .attr("class","graphsubtitle")
-                .append("a")
-                .attr("xlink:href", "https://fred.stlouisfed.org/series/"+var2.id)
-                .attr("xlink:show", "new")
-                .text("source");
-
-    svg.append("text")
-                .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("transform", "translate("+ 700 +","+525+")")  // text is drawn off the screen top left, move down and out and rotate
-                .attr("class","graphsubtitle")
-                .append("a")
-                .attr("xlink:href", "https://fred.stlouisfed.org/series/"+var3.id)
-                .attr("xlink:show", "new")
-                .text("source");
-
-
+    //Probably a better wy to do this, but moves the SVG canvas down
     svg.style('background', '#C9D7D6')
     svg.style('fill', '#536870')
+    svg.attr("transform", 
+                  "translate(" + 40 + "," + 75+ ")");
 
+    //Draws the title information (Graph title, make priamary button, source)
+    function drawTitle(measure,height){
+        svg.append("text")
+                    .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
+                    .attr("transform", "translate("+ 575 +","+height+")")  // text is drawn off the screen top left, move down and out and rotate
+                    .attr("class","graphtitle")
+                    .text(measure.title);
 
-/*    $(function () {
-        $('#SecondaryGraph1_2').on('click', function () {
-            var text = $('#lookup');
-            text.val(text.val() + 'unemployment rate, April 2003 through September 2004, San Francisco Home Price Index');    
-        });
-    });*/
-/*    $(function () {
-        $('#SecondaryGraph1_4').on('click', function () {
-            var text = $('#lookup');
-            text.val(text.val() + 'unemployment rate, February 2008 through January 2009, San Francisco Home Price Index');    
-        });
-    });
-    $(function () {
-        $('#SecondaryGraph1_6').on('click', function () {
-            var text = $('#lookup');
-            text.val(text.val() + 'unemployment rate, October 2012 through April 2014, San Francisco Home Price Index');    
-        });
-    });
-    $(function () {
-        $('#SecondaryGraph1_8').on('click', function () {
-            var text = $('#lookup');
-            text.val(text.val() + 'unemployment rate, July 2014 through July 2015, San Francisco Home Price Index');    
-        });
-    });
-    $(function () {
-        $('#SecondaryGraph2_2').on('click', function () {
-            var text = $('#lookup');
-            text.val(text.val() + var3 +', March 1996 through September 1997, San Francisco Home Price Index');    
-        });
-    });
-    $(function () {
-        $('#SecondaryGraph2_4').on('click', function () {
-            var text = $('#lookup');
-            text.val(text.val() + 'San Francisco Tech Pulse, July 1998 through October 2000, San Francisco Home Price Index');    
-        });
-    });
-    $(function () {
-        $('#SecondaryGraph2_6').on('click', function () {
-            var text = $('#lookup');
-            text.val(text.val() + 'San Francisco Tech Pulse, February 2001 through November 2002, San Francisco Home Price Index');    
-        });
-    });
-    $(function () {
-        $('#SecondaryGraph2_8').on('click', function () {
-            var text = $('#lookup');
-            text.val(text.val() + 'San Francisco Tech Pulse, April 2008 through June 2010, San Francisco Home Price Index');    
-        });
-    });*/
+        svg.append("text")
+                    .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
+                    .attr("transform", "translate("+ 575 +","+(height+15)+")")  // text is drawn off the screen top left, move down and out and rotate
+                    .attr("class","graphsubtitle")
+                    .append("a")
+                    .attr("onclick", "primary"+measure.id+"()")
+                    .text('make primary');
+
+        svg.append("text")
+            .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
+            .attr("transform", "translate("+ 670 +","+(height+15)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("class","graphsubtitle")
+            .append("a")
+            .attr("xlink:href", "https://fred.stlouisfed.org/series/"+measure.id)
+            .attr("xlink:show", "new")
+            .text("source");
+
+        svg.append("circle")
+            .attr("cx", 662.5)
+            .attr("cy", height+12.5)
+            .attr("r", 2)
+            .attr('fill','#CA7E00')
+    }
+
+    //Function that maps the Corr Bars on the Primary Graph
+    function primaryBars(data,flag_index,i){
+                data.forEach(function(d) {
+                    console.log(flag_index);
+                    if(flag_index==1){
+                        flag=d.flag1;
+                    }
+                    else{
+                        flag=d.flag2;
+                    }
+                    if(flag==(i % 2)){
+                        if((i % 2)==1){
+                            startBar=d.date;
+
+                        }
+                        else{
+                            endBar=d.date;
+                            lineSvg.append('g')
+
+                                .attr('width', width)
+                                .attr('height', height)
+                                .attr('class', 'corrbarsPrimary')
+                                .selectAll('rect').data(bardata)
+                            .enter()
+                            .append('rect')
+                                .transition()
+                                .ease('linear')
+                                .duration(500)
+                                .delay(1000)
+                                .attr('width', x(endBar)-x(startBar) )
+                                .attr('height', function(d) {
+                                    return yScale(d);
+                                })
+                                .attr('x', function(d,i) {
+                                    return x(startBar);
+                                })
+                                .attr('y', function(d) {
+                                    return 0;
+                                });                        }
+                        i=i+1
+                    }
+                });
+            }
 
 }
+
