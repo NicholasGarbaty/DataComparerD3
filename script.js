@@ -351,7 +351,7 @@ function drawGraph(inputData,var1,var2,var3) {
                                          y_three(d.data3) + ")")
                     .text(Math.round(d.data3*100)/100);
 
-/*                focus.select("text.y3")
+                focus.select("text.y3")
                     .attr("transform",
                           "translate(" + x(d.date) + "," +
                                          y(d.data1) + ")")
@@ -362,7 +362,7 @@ function drawGraph(inputData,var1,var2,var3) {
                           "translate(" + x(d.date) + "," +
                                          y(d.data1) + ")")
                     .text(formatDate(d.date));
-*/
+
                 focus.select("text.y3")
                     .text(formatDate(d.date));
 
@@ -372,8 +372,9 @@ function drawGraph(inputData,var1,var2,var3) {
                 focus.select(".x")
                     .attr("transform",
                           "translate(" + x(d.date) + "," +
-                                         y(d.data1) + ")")
-                               .attr("y2",  height + y(d.data1));
+                                         0 + ")")
+                                .attr("y1",y(d.data1))
+                               .attr("y2",  550);
 
                 focus.select(".y")
                     .attr("transform",
@@ -633,7 +634,7 @@ function drawGraph(inputData,var1,var2,var3) {
     drawTitle(var2,325);
     drawTitle(var3,450);
 
-    //Draw the title
+/*    //Draw the title
     svg.append("text")
         .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
         .attr("transform", "translate("+ 0+","+-30+")")  // text is drawn off the screen top left, move down and out and rotate
@@ -644,7 +645,7 @@ function drawGraph(inputData,var1,var2,var3) {
     svg.style('background', '#C9D7D6')
     svg.style('fill', '#536870')
     svg.attr("transform", 
-                  "translate(" + 40 + "," + 75+ ")");
+                  "translate(" + 40 + "," + 75+ ")");*/
 
     //Draws the title information (Graph title, make priamary button, source)
     function drawTitle(measure,height){
