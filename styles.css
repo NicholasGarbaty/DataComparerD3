@@ -8,16 +8,30 @@ p {
 	opacity: .7;
 	cursor: pointer;
 }
+.corrbarsPrimary:hover {
+	opacity: 1;
+	cursor: pointer;
+}
 .graphtitle {
 	fill: #CA7E00;
-	font-family: "Exo 2", "Helvetica Neue", Helvetica, sans-serif;
+	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+	font-size: 18px;
+	cursor: pointer;
+}
+.graphsubtitle {
+	fill: #CA7E00;
+	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+	font-size: 12px;
 	cursor: pointer;
 }
 .graphtitle:hover {
 	text-decoration: underline;
 }
+.graphsubtitle:hover {
+	text-decoration: underline;
+}
 #wrapper {
-	background-color: #B2C9D9;
+	background-color: #DCE8E6;
 	width: 75%;
 	height: 100%;
 }

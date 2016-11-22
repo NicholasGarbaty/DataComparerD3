@@ -9,17 +9,32 @@ var SF_Tech_Pulse = {
 };
 
 var UR = {
-    title: 'UR',
+    title: 'Unemployment Rate',
     id: 'SANF806UR'
 };
 
-drawGraph('fred_sf.csv',
+drawGraph('primaryHPI.csv',
         SF_Home_Price_Index, UR,SF_Tech_Pulse)
 
-function updateData(){
+function primarySFXRSA(){
     d3.select("svg").remove();
-    drawGraph('fred_sf_reordered.csv',
+    console.log("Primary is HPI")
+    drawGraph('primaryHPI.csv',
+            SF_Home_Price_Index, UR,SF_Tech_Pulse)
+}
+
+function primarySFTPGRM157SFRBSF(){
+    d3.select("svg").remove();
+    console.log("Primary is SF Tech Pulse")
+    drawGraph('primaryTechPulse.csv',
         SF_Tech_Pulse, UR, SF_Home_Price_Index)
+}
+
+function primarySANF806UR(){
+    d3.select("svg").remove();
+    console.log("Primary is SF Unemployment")
+    drawGraph('primaryUR.csv',
+         UR,SF_Tech_Pulse, SF_Home_Price_Index)
 }
 
 function drawGraph(inputData,var1,var2,var3) {
@@ -30,7 +45,7 @@ function drawGraph(inputData,var1,var2,var3) {
 
     // Parse the date / time
     var parseDate = d3.time.format("%d-%b-%y").parse,
-        formatDate = d3.time.format("%d-%b"),
+        formatDate = d3.time.format("%d-%b-%y"),
         bisectDate = d3.bisector(function(d) { return d.date; }).left;
 
     // Set the ranges
@@ -220,26 +235,34 @@ function drawGraph(inputData,var1,var2,var3) {
                 .attr("x1", width)
                 .attr("x2", width);
 
+
+
+
+
             // append the circle at the intersection
-            focus.append("circle")
-                .attr("class", "y")
-                .style("fill", "none")
-                .style("stroke", "firebrick")
-                .attr("r", 4);
-
+            for(i = 1; i<4; i++){
+                focus.append("circle")
+                    .attr("class", "y"+i)
+                    .style("fill", "none")
+                    .style("stroke", "firebrick")
+                    .attr("r", 4);
+            }
             // place the value at the intersection
-            focus.append("text")
-                .attr("class", "y1")
-                .style("stroke", "white")
-                .style("stroke-width", "3.5px")
-                .style("opacity", 0.8)
-                .attr("dx", 8)
-                .attr("dy", "-.3em");
-            focus.append("text")
-                .attr("class", "y2")
-                .attr("dx", 8)
-                .attr("dy", "-.3em");
-
+            for(i = 1; i<4; i++){
+                focus.append("text")
+                    .attr("class", "yWhite"+i)
+                    .style("stroke", "white")
+                    .style("stroke-width", "3.5px")
+                    .style("opacity", 0.8)
+                    .attr("dx", 8)
+                    .attr("dy", "-.3em");
+            }
+            for(i = 1; i<4; i++){
+                focus.append("text")
+                    .attr("class", "yBlack"+i)
+                    .attr("dx", 8)
+                    .attr("dy", "-.3em");
+            }
             // place the date at the intersection
             focus.append("text")
                 .attr("class", "y3")
@@ -262,7 +285,47 @@ function drawGraph(inputData,var1,var2,var3) {
                 .on("mouseover", function() { focus.style("display", null); })
                 .on("mouseout", function() { focus.style("display", "none"); })
                 .on("mousemove", mousemove);
+//For Loop to Add Transparent Bars
+            var startBar;
+            var endBar;
+            var i=1;
+            data.forEach(function(d) {
+                if(d.flag2==(i % 2)){
+                    if((i % 2)==1){
+                        startBar=d.date;
 
+                    }
+                    else{
+                        endBar=d.date;
+                        lineSvg.append('g')
+
+                            .attr('width', width)
+                            .attr('height', height)
+                            .attr('class', 'corrbarsPrimary')
+                            .attr('id','PrimaryGraph1_'+i)
+                            .selectAll('rect').data(bardata)
+                        .enter()
+                        .append('rect')
+                            .transition()
+                            .ease('linear')
+                            .duration(500)
+                            .delay(1000)
+                            .style('fill', '#ECB977')
+                            .attr('width', x(endBar)-x(startBar) )
+                            .attr('height', function(d) {
+                                return yScale(d);
+                            })
+                            .attr('x', function(d,i) {
+                                return x(startBar);
+                            })
+                            .attr('y', function(d) {
+                                return 0;
+                            })
+                             .style("opacity", 0);   
+                    }
+                    i=i+1
+                }
+            });
             function mousemove() {
                 var x0 = x.invert(d3.mouse(this)[0]),
                     i = bisectDate(data, x0, 1),
@@ -270,24 +333,60 @@ function drawGraph(inputData,var1,var2,var3) {
                     d1 = data[i],
                     d = x0 - d0.date > d1.date - x0 ? d1 : d0;
 
-                focus.select("circle.y")
+                focus.select("circle.y1")
                     .attr("transform",
                           "translate(" + x(d.date) + "," +
                                          y(d.data1) + ")");
 
-                focus.select("text.y1")
+                focus.select("circle.y2")
+                    .attr("transform",
+                          "translate(" + x(d.date) + "," +
+                                         y_two(d.data2) + ")");
+
+                focus.select("circle.y3")
+                    .attr("transform",
+                          "translate(" + x(d.date) + "," +
+                                         y_three(d.data3) + ")");
+
+
+                focus.select("text.yWhite1")
                     .attr("transform",
                           "translate(" + x(d.date) + "," +
                                          y(d.data1) + ")")
-                    .text(d.data1);
+                   .text(Math.round(d.data1*100)/100);
 
-                focus.select("text.y2")
+                focus.select("text.yWhite2")
+                    .attr("transform",
+                          "translate(" + x(d.date) + "," +
+                                         y_two(d.data2) + ")")
+                   .text(Math.round(d.data2*100)/100);
+
+                focus.select("text.yWhite3")
+                    .attr("transform",
+                          "translate(" + x(d.date) + "," +
+                                         y_three(d.data3) + ")")
+                   .text(Math.round(d.data3*100)/100);
+
+
+                focus.select("text.yBlack1")
                     .attr("transform",
                           "translate(" + x(d.date) + "," +
                                          y(d.data1) + ")")
-                    .text(d.data1);
+                   .text(Math.round(d.data1*100)/100);
 
-                focus.select("text.y3")
+                focus.select("text.yBlack2")
+                    .attr("transform",
+                          "translate(" + x(d.date) + "," +
+                                         y_two(d.data2) + ")")
+                   .text(Math.round(d.data2*100)/100);
+
+                focus.select("text.yBlack3")
+                    .attr("transform",
+                          "translate(" + x(d.date) + "," +
+                                         y_three(d.data3) + ")")
+                    .text(Math.round(d.data3*100)/100);
+
+/*                focus.select("text.y3")
                     .attr("transform",
                           "translate(" + x(d.date) + "," +
                                          y(d.data1) + ")")
@@ -297,6 +396,12 @@ function drawGraph(inputData,var1,var2,var3) {
                     .attr("transform",
                           "translate(" + x(d.date) + "," +
                                          y(d.data1) + ")")
+                    .text(formatDate(d.date));
+*/
+                focus.select("text.y3")
+                    .text(formatDate(d.date));
+
+                focus.select("text.y4")
                     .text(formatDate(d.date));
 
                 focus.select(".x")
@@ -422,7 +527,7 @@ function drawGraph(inputData,var1,var2,var3) {
                         $(function () {
                             $(id).on('click', function () {
                                 var text = $('#lookup');
-                                text.val(text.val() + var2.title+', '+startBar+' through ,' + var1.title );
+                                text.val(text.val() + var2.title + ' & ' + var1.title + ', '+formatDate(startBar)+' through,'+formatDate(endBar));
         });
     });  
                     }
@@ -525,7 +630,7 @@ function drawGraph(inputData,var1,var2,var3) {
                             .ease('linear')
                             .duration(500)
                             .delay(1000)
-                            .style('fill', '#C49E47')
+                            .style('fill', '#ECB977')
                             .attr('width', x(endBar)-x(startBar) )
                             .attr('height', function(d) {
                                 return yScale_secondary(d);
@@ -542,7 +647,7 @@ function drawGraph(inputData,var1,var2,var3) {
                             $(function () {
                             $(id).on('click', function () {
                                 var text = $('#lookup');
-                                text.val(text.val() + var3.title+', '+startBar+' through ,' + var1.title );
+                                text.val(text.val() + var3.title + ' & ' + var1.title + ', '+formatDate(startBar)+' through,'+formatDate(endBar));
                                 });
                         });  
                     }
@@ -561,7 +666,7 @@ function drawGraph(inputData,var1,var2,var3) {
                 .attr("transform", "translate("+ 700 +","+150+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","graphtitle")
                 .append("a")
-                .attr("onclick", "updateData()")
+                .attr("onclick", "primary"+var1.id+"()")
                 .text(var1.title);
                 
 
@@ -571,7 +676,7 @@ function drawGraph(inputData,var1,var2,var3) {
                 .attr("transform", "translate("+ 700 +","+375+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","graphtitle")
                 .append("a")
-                .attr("onclick", "updateData()")
+                .attr("onclick", "primary"+var2.id+"()")
                 .text(var2.title);
 
     svg.append("text")
@@ -579,13 +684,13 @@ function drawGraph(inputData,var1,var2,var3) {
                 .attr("transform", "translate("+ 700 +","+500+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","graphtitle")
                 .append("a")
-                .attr("onclick", "updateData()")
+                .attr("onclick", "primary"+var3.id+"()")
                 .text(var3.title);
 
     svg.append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
                 .attr("transform", "translate("+ 700 +","+177+")")  // text is drawn off the screen top left, move down and out and rotate
-                .attr("class","graphtitle")
+                .attr("class","graphsubtitle")
                 .append("a")
                 .attr("xlink:href", "https://fred.stlouisfed.org/series/"+var1.id)
                 .attr("xlink:show", "new")
@@ -594,7 +699,7 @@ function drawGraph(inputData,var1,var2,var3) {
     svg.append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
                 .attr("transform", "translate("+ 700 +","+400+")")  // text is drawn off the screen top left, move down and out and rotate
-                .attr("class","graphtitle")
+                .attr("class","graphsubtitle")
                 .append("a")
                 .attr("xlink:href", "https://fred.stlouisfed.org/series/"+var2.id)
                 .attr("xlink:show", "new")
@@ -603,7 +708,7 @@ function drawGraph(inputData,var1,var2,var3) {
     svg.append("text")
                 .attr("text-anchor", "middle")  // this makes it easy to centre the text as the transform is applied to the anchor
                 .attr("transform", "translate("+ 700 +","+525+")")  // text is drawn off the screen top left, move down and out and rotate
-                .attr("class","graphtitle")
+                .attr("class","graphsubtitle")
                 .append("a")
                 .attr("xlink:href", "https://fred.stlouisfed.org/series/"+var3.id)
                 .attr("xlink:show", "new")
