@@ -1,64 +1,115 @@
-//Three parameters of interest
+/*Variables that program will sort through
+    Title: title of variable
+    ID: ID on the FRED Website
+    Description: Tooltip description*/
 var SF_Home_Price_Index= {
-    title: 'SF Home Price Index',
-    id: 'SFXRSA'
+    title: 'SF Home Price Index', 
+    id: 'SFXRSA',
+    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy"
 };
 
 var SF_Tech_Pulse = {
     title: 'SF Tech Pulse',
-    id: 'SFTPGRM157SFRBSF'
+    id: 'SFTPGRM157SFRBSF',
+    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy"
 };
 
-var UR = {
+var UR_SF = {
     title: 'Unemployment Rate',
-    id: 'SANF806UR'
+    id: 'SANF806UR',
+    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy"
+
+};
+
+//Three parameters of interest
+var Seattle_Home_Price_Index= {
+    title: 'Seattle Home Price Index',
+    id: 'SEXRSA',
+    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy"
+
+};
+
+var Seattle_ECI = {
+    title: 'Seattle Economic Conditions Index',
+    id: 'STWAGRIDX',
+    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy"
+
 };
 
 //Draws default graph
-drawGraph('primaryHPI.csv',
-        SF_Home_Price_Index, UR,SF_Tech_Pulse);
+drawGraph('primaryHPISF.csv',
+        SF_Home_Price_Index, UR_SF,SF_Tech_Pulse);
 
 //Functions to draw situations with different primary graphs
 function primarySFXRSA(){
     d3.select("svg").remove();
-    console.log("Primary is HPI")
-    drawGraph('primaryHPI.csv',
-            SF_Home_Price_Index, UR,SF_Tech_Pulse)
+    console.log("Primary is SF HPI")
+    drawGraph('primaryHPISF.csv',
+            SF_Home_Price_Index, UR_SF,SF_Tech_Pulse)
 }
 
 function primarySFTPGRM157SFRBSF(){
     d3.select("svg").remove();
     console.log("Primary is SF Tech Pulse")
     drawGraph('primaryTechPulse.csv',
-        SF_Tech_Pulse, UR, SF_Home_Price_Index)
+        SF_Tech_Pulse,
+        SF_Home_Price_Index,Seattle_Home_Price_Index)
 }
 
 function primarySANF806UR(){
     d3.select("svg").remove();
     console.log("Primary is SF Unemployment")
-    drawGraph('primaryUR.csv',
-         UR,SF_Tech_Pulse, SF_Home_Price_Index)
+    drawGraph('primaryURSF.csv',
+         UR_SF,SF_Tech_Pulse, SF_Home_Price_Index)
+}
+
+function primarySEXRSA(){
+    d3.select("svg").remove();
+    console.log("Primary is Seattle HPI")
+    drawGraph('primaryHPISeattle.csv',
+         Seattle_Home_Price_Index,
+         Seattle_ECI, SF_Tech_Pulse)
+}
+
+function primarySTWAGRIDX(){
+    d3.select("svg").remove();
+    console.log("Primary is Seattle ECI")
+    drawGraph('primaryECISeattle.csv',
+         Seattle_ECI,
+         Seattle_Home_Price_Index, SF_Tech_Pulse)
 }
 
 //Actually draws the graph
 function drawGraph(inputData,var1,var2,var3) {
     // Set the dimensions of the canvas / graph
-    var margin = {top: 30, right: 400, bottom: 30, left: 50},
+    var margin = {top: 0, right: 400, bottom: 30, left: 50},
         width = 1000 - margin.left - margin.right,
         height = 800 - margin.top - margin.bottom;
 
     // Parse the date / time
-    var parseDate = d3.time.format("%d-%b-%y").parse,
+    var parseDate = d3.time.format("%Y-%m-%d").parse,
         formatDate = d3.time.format("%d-%b-%y"),
         bisectDate = d3.bisector(function(d) { return d.date; }).left;
 
+    //Determines the height and spacing of the graphs
+    primaryHeight = 250;
+    secondaryHeight = 90;
+    graphSpacing = 65;
+    //Variables that help future code be cleaner, accomplishes the same as above
+    primaryHeight1_1 = graphSpacing;
+    primaryHeight1_2 = primaryHeight1_1+primaryHeight;
+
+    secondaryHeight1_1 = primaryHeight1_2+graphSpacing;
+    secondaryHeight1_2 = secondaryHeight1_1+secondaryHeight
+
+    secondaryHeight2_1 = secondaryHeight1_2+graphSpacing;
+    secondaryHeight2_2 =  secondaryHeight2_1+secondaryHeight;
+
     // Set the ranges
     var x = d3.time.scale().range([0, width]);
-    var y = d3.scale.linear().range([300, 0]); //Range for primary graph
-    var y_two = d3.scale.linear().range([425, 325]); //Range for secondary graph 1
-    var y_three = d3.scale.linear().range([550, 450]); //Range for secondary graph 2
-    //Need to eventually change the ranges so it's not hardcoded
-
+    var y = d3.scale.linear().range([primaryHeight1_2, primaryHeight1_1]); //Range for primary graph
+    var y_two = d3.scale.linear().range([secondaryHeight1_2, secondaryHeight1_1]); //Range for secondary graph 1
+    var y_three = d3.scale.linear().range([secondaryHeight2_2, secondaryHeight2_1]); //Range for secondary graph 2
 
     // Define the axes
     var xAxis = d3.svg.axis().scale(x) //shared xAxis for entire graph
@@ -129,23 +180,26 @@ function drawGraph(inputData,var1,var2,var3) {
 
     var lineSvg = svg.append("g"); 
 
-    var focus = lineSvg.append("g") 
+    var focus = svg.append("g") 
         .style("display", "none");
 
     var bardata = [180];
     var yScale = d3.scale.linear()
             .domain([0, d3.max(bardata)])
-            .range([0, 300])
+            .range([0, primaryHeight])
 
     var yScale_secondary = d3.scale.linear()
             .domain([0, d3.max(bardata)])
-            .range([0, 100])
+            .range([0, secondaryHeight])
 
+    //Not entirely sure what the height term does
+    //Width is width of the graphs
     var height = 400,
         width = 600,
         barWidth = 50,
         barOffset = 5;
 
+    //Calls the actual graphing function
     grapher(inputData);
 
 
@@ -159,324 +213,297 @@ function drawGraph(inputData,var1,var2,var3) {
                 //Not entirely sure what this does, copied from origianl graph - Saurabh
                 d.date = parseDate(d.date);
                 d.data1= +d.data1;
+                d.data2 = +d.data2;
+                d.data3 = +d.data3;
             });
 
 
-            var yAxis = d3.svg.axis().scale(y)
-                .orient("left").ticks(5); //yAxis for primary graph
+        var yAxis = d3.svg.axis().scale(y)
+            .orient("left").ticks(5); //yAxis for primary graph
 
-            // Scale the range of the data
-            // Sets the axes as well
-            x.domain(d3.extent(data, function(d) { return d.date; }));
-            y.domain([d3.min(data, function(d) { return d.data1; }), 
-                d3.max(data, function(d) { return d.data1; })]);
+        // Scale the range of the data
+        // Sets the axes as well
+        x.domain(d3.extent(data, function(d) { return d.date; }));
+        y.domain([d3.min(data, function(d) { return d.data1; }), 
+            d3.max(data, function(d) { return d.data1; })]);
 
-            x(parseDate('1-Aug-16'))
           
 
-            // Add all the data .
-            var path =lineSvg.append("path")
-                .data(data)
-                .attr("class", "line")
-                .attr("d", valueline_1(data));   
+        // Add all the data .
+        var path =lineSvg.append("path")
+            .data(data)
+            .attr("class", "line")
+            .attr("d", valueline_1(data));   
+        //Function to add path animation
+        pathAnimation(path)
 
-            var totalLength = path.node().getTotalLength();
+  
 
-            path
-              .attr("stroke-dasharray", totalLength + " " + totalLength)
-              .attr("stroke-dashoffset", totalLength)
-              .transition()
-                .duration(1000)
-                .ease("linear")
-                .attr("stroke-dashoffset", 0);
+        // Add the correlated data
+        var path_corr = lineSvg.append("path")
+            .data(data)
+            .attr("class", "line")
+            .attr("d", valueline_corr_1(data))
+            .style('stroke','#FF9000');
 
-            // Add the correlated data
-            var path_corr = lineSvg.append("path")
-                .data(data)
-                .attr("class", "line")
-                .attr("d", valueline_corr_1(data))
-                .style('stroke','#FF9000');
-
-            var totalLength = path_corr.node().getTotalLength();
-
-            path_corr
-              .attr("stroke-dasharray", totalLength + " " + totalLength)
-              .attr("stroke-dashoffset", totalLength)
-                            .transition()
-                            .ease('linear')
-                            .duration(1500)
-                            .delay(1000)
-                .attr("stroke-dashoffset", 0);
-            /*Everything from here to the end of function I'm not sure how it works
-            I got it all from the online tutorial */
-
-            // Add the X Axis
-            svg.append("g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + 300 + ")")
-                .call(xAxis);
-
-            // Add the Y Axis
-            svg.append("g")
-                .attr("class", "y axis")
-                .call(yAxis);
-
-           // append the x line
-            focus.append("line")
-                .attr("class", "x")
-                .style("stroke", "blue")
-                .style("stroke-dasharray", "3,3")
-                .style("opacity", 0.5)
-                .attr("y1", 0)
-                .attr("y2", height);
-
-            // append the y line
-            focus.append("line")
-                .attr("class", "y")
-                .style("stroke", "blue")
-                .style("stroke-dasharray", "3,3")
-                .style("opacity", 0.5)
-                .attr("x1", width)
-                .attr("x2", width);
+        //Function to add path animation
+        pathCorrAnimation(path_corr)
 
 
 
 
+        /*I got the following from the online Bl.ocks I pulled this
+        off of*/
 
-            // append the circle at the intersection
-            for(i = 1; i<4; i++){
-                focus.append("circle")
-                    .attr("class", "y"+i)
-                    .style("fill", "none")
-                    .style("stroke", "firebrick")
-                    .attr("r", 4);
-            }
-            // place the value at the intersection
-            for(i = 1; i<4; i++){
-                focus.append("text")
-                    .attr("class", "yWhite"+i)
-                    .style("stroke", "white")
-                    .style("stroke-width", "3.5px")
-                    .style("opacity", 0.8)
-                    .attr("dx", 8)
-                    .attr("dy", "-.3em");
-            }
-            for(i = 1; i<4; i++){
-                focus.append("text")
-                    .attr("class", "yBlack"+i)
-                    .attr("dx", 8)
-                    .attr("dy", "-.3em");
-            }
-            // place the date at the intersection
+        // Add the X Axis
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + primaryHeight1_2+ ")")
+            .call(xAxis);
+
+        // Add the Y Axis
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis);
+
+       // append the x line
+        focus.append("line")
+            .attr("class", "x")
+            .style("stroke", "blue")
+            .style("stroke-dasharray", "3,3")
+            .style("opacity", 0.5)
+            .attr("y1", 0)
+            .attr("y2", height);
+
+        // append the y line
+        focus.append("line")
+            .attr("class", "y")
+            .style("stroke", "blue")
+            .style("stroke-dasharray", "3,3")
+            .style("opacity", 0.5)
+            .attr("x1", width)
+            .attr("x2", width);
+
+        // append the circle at the intersection
+        for(i = 1; i<4; i++){
+            focus.append("circle")
+                .attr("class", "y"+i)
+                .style("fill", "none")
+                .style("stroke", "firebrick")
+                .attr("r", 4);
+        }
+        // place the value at the intersection
+        for(i = 1; i<4; i++){
             focus.append("text")
-                .attr("class", "y3")
+                .attr("class", "yWhite"+i)
                 .style("stroke", "white")
                 .style("stroke-width", "3.5px")
-                .style("opacity", 0.8)
+                .style("opacity", 0.5)
                 .attr("dx", 8)
-                .attr("dy", "1em");
+                .attr("dy", "-.3em");
+        }
+        for(i = 1; i<4; i++){
             focus.append("text")
-                .attr("class", "y4")
+                .attr("class", "yBlack"+i)
                 .attr("dx", 8)
-                .attr("dy", "1em");
-            
-            // append the rectangle to capture mouse
-            svg.append("rect")
-                .attr("width", width)
-                .attr("height", 300)
-                .style("fill", "none")
-                .style("pointer-events", "all")
-                .on("mouseover", function() { focus.style("display", null); })
-                .on("mouseout", function() { focus.style("display", "none"); })
-                .on("mousemove", mousemove);
+                .attr("dy", "-.3em");
+        }
+        // place the date at the intersection
+        focus.append("text")
+            .attr("class", "y3")
+            .style("stroke", "white")
+            .style("stroke-width", "3.5px")
+            .style("opacity", 0.8)
+            .attr("dx", 8)
+            .attr("dy", "1em");
+        focus.append("text")
+            .attr("class", "y4")
+            .attr("dx", 8)
+            .attr("dy", "1em");
+        
+        // append the rectangle to capture mouse
+        svg.append("rect")
+            .attr("width", width)
+            .attr("height", primaryHeight)
+            .attr("transform",
+                      "translate(" + 0 + "," +
+                                     graphSpacing + ")")
+            .style("fill", "none")
+            .style("pointer-events", "all")
+            .on("mouseover", function() { focus.style("display", null); })
+            .on("mouseout", function() { focus.style("display", "none"); })
+            .on("mousemove", mousemove);
 
-            function mousemove() {
-                var x0 = x.invert(d3.mouse(this)[0]),
-                    i = bisectDate(data, x0, 1),
-                    d0 = data[i - 1],
-                    d1 = data[i],
-                    d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+        //Function that does mouse move action
+        function mousemove() {
+            var x0 = x.invert(d3.mouse(this)[0]),
+                i = bisectDate(data, x0, 1),
+                d0 = data[i - 1],
+                d1 = data[i],
+                d = x0 - d0.date > d1.date - x0 ? d1 : d0;
 
-                focus.select("circle.y1")
-                    .attr("transform",
-                          "translate(" + x(d.date) + "," +
-                                         y(d.data1) + ")");
+            focus.select("circle.y1")
+                .attr("transform",
+                      "translate(" + x(d.date) + "," +
+                                     y(d.data1) + ")");
 
-                focus.select("circle.y2")
-                    .attr("transform",
-                          "translate(" + x(d.date) + "," +
-                                         y_two(d.data2) + ")");
+            focus.select("circle.y2")
+                .attr("transform",
+                      "translate(" + x(d.date) + "," +
+                                     y_two(d.data2) + ")");
 
-                focus.select("circle.y3")
-                    .attr("transform",
-                          "translate(" + x(d.date) + "," +
-                                         y_three(d.data3) + ")");
-
-
-                focus.select("text.yWhite1")
-                    .attr("transform",
-                          "translate(" + x(d.date) + "," +
-                                         y(d.data1) + ")")
-                   .text(Math.round(d.data1*100)/100);
-
-                focus.select("text.yWhite2")
-                    .attr("transform",
-                          "translate(" + x(d.date) + "," +
-                                         y_two(d.data2) + ")")
-                   .text(Math.round(d.data2*100)/100);
-
-                focus.select("text.yWhite3")
-                    .attr("transform",
-                          "translate(" + x(d.date) + "," +
-                                         y_three(d.data3) + ")")
-                   .text(Math.round(d.data3*100)/100);
+            focus.select("circle.y3")
+                .attr("transform",
+                      "translate(" + x(d.date) + "," +
+                                     y_three(d.data3) + ")");
 
 
-                focus.select("text.yBlack1")
-                    .attr("transform",
-                          "translate(" + x(d.date) + "," +
-                                         y(d.data1) + ")")
-                   .text(Math.round(d.data1*100)/100);
+            focus.select("text.yWhite1")
+                .attr("transform",
+                      "translate(" + x(d.date) + "," +
+                                     y(d.data1) + ")")
+               .text(Math.round(d.data1*100)/100);
 
-                focus.select("text.yBlack2")
-                    .attr("transform",
-                          "translate(" + x(d.date) + "," +
-                                         y_two(d.data2) + ")")
-                   .text(Math.round(d.data2*100)/100);
+            focus.select("text.yWhite2")
+                .attr("transform",
+                      "translate(" + x(d.date) + "," +
+                                     y_two(d.data2) + ")")
+               .text(Math.round(d.data2*100)/100);
 
-                focus.select("text.yBlack3")
-                    .attr("transform",
-                          "translate(" + x(d.date) + "," +
-                                         y_three(d.data3) + ")")
-                    .text(Math.round(d.data3*100)/100);
+            focus.select("text.yWhite3")
+                .attr("transform",
+                      "translate(" + x(d.date) + "," +
+                                     y_three(d.data3) + ")")
+               .text(Math.round(d.data3*100)/100);
 
-                focus.select("text.y3")
-                    .attr("transform",
-                          "translate(" + x(d.date) + "," +
-                                         y(d.data1) + ")")
-                    .text(formatDate(d.date));
 
-                focus.select("text.y4")
-                    .attr("transform",
-                          "translate(" + x(d.date) + "," +
-                                         y(d.data1) + ")")
-                    .text(formatDate(d.date));
+            focus.select("text.yBlack1")
+                .attr("transform",
+                      "translate(" + x(d.date) + "," +
+                                     y(d.data1) + ")")
+               .text(Math.round(d.data1*100)/100);
 
-                focus.select("text.y3")
-                    .text(formatDate(d.date));
+            focus.select("text.yBlack2")
+                .attr("transform",
+                      "translate(" + x(d.date) + "," +
+                                     y_two(d.data2) + ")")
+               .text(Math.round(d.data2*100)/100);
 
-                focus.select("text.y4")
-                    .text(formatDate(d.date));
+            focus.select("text.yBlack3")
+                .attr("transform",
+                      "translate(" + x(d.date) + "," +
+                                     y_three(d.data3) + ")")
+                .text(Math.round(d.data3*100)/100);
 
-                focus.select(".x")
-                    .attr("transform",
-                          "translate(" + x(d.date) + "," +
-                                         0 + ")")
-                                .attr("y1",y(d.data1))
-                               .attr("y2",  550);
+            focus.select("text.y3")
+                .attr("transform",
+                      "translate(" + x(d.date) + "," +
+                                     y(d.data1) + ")")
+                .text(formatDate(d.date));
 
-                focus.select(".y")
-                    .attr("transform",
-                          "translate(" + width * -1 + "," +
-                                         y(d.data1) + ")")
-                               .attr("x2", width + 550);
+            focus.select("text.y4")
+                .attr("transform",
+                      "translate(" + x(d.date) + "," +
+                                     y(d.data1) + ")")
+                .text(formatDate(d.date));
 
-            }
-            primaryBars(data,1,1);
-            primaryBars(data,2,1);
+            focus.select("text.y3")
+                .text(formatDate(d.date));
+
+            focus.select("text.y4")
+                .text(formatDate(d.date));
+
+            focus.select(".x")
+                .attr("transform",
+                      "translate(" + x(d.date) + "," +
+                                     0 + ")")
+                            .attr("y1",y(d.data1))
+                           .attr("y2",  secondaryHeight2_2);
+
+            focus.select(".y")
+                .attr("transform",
+                      "translate(" + width * -1 + "," +
+                                     y(d.data1) + ")")
+                           .attr("x2", width + 550);
+
+        }
+
+        //Used to call method for graphing corr bars on primary graph
+/*            primaryBars(data,1,1);
+            primaryBars(data,2,1);*/
           
-        });
+        //SECONDARY GRAPH 1 STARTS HERE
+        var yAxis2 = d3.svg.axis().scale(y_two)
+            .orient("left").ticks(5); //yAxis for secondary graph 1
+
+
+        // Scale the range of the data
+        // Sets the axes as well
+        x.domain(d3.extent(data, function(d) { return d.date; }));
+        y_two.domain([d3.min(data, function(d) { return d.data2; }), 
+            d3.max(data, function(d) { return d.data2; })]);
+
+        // Add all the data .
+        var path = lineSvg.append("path")
+            .data(data)
+            .attr("class", "line")
+            .attr("d", valueline_2(data))
+
+        // Add correlated data .
+        path_corr = lineSvg.append("path")
+            .data(data)
+            .attr("class", "line")
+            .attr("d", valueline_corr_2(data))
+            .style('stroke','#FF9000');
+     
+        //Animation for correlated paths
+        pathAnimation(path);
+        pathCorrAnimation(path_corr)
 
 
 
-        //Graphing Secondary Graph 1
-        d3.csv(inputData, function(error, data) {
-            data.forEach(function(d) {
-                d.date = parseDate(d.date);
-                d.data2 = +d.data2;
-            });
+        // Add the X Axis
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + secondaryHeight1_2 + ")")
+            .call(xAxis);
 
-            var yAxis2 = d3.svg.axis().scale(y_two)
-                .orient("left").ticks(5); //yAxis for secondary graph 1
-
-
-            // Scale the range of the data
-            // Sets the axes as well
-            x.domain(d3.extent(data, function(d) { return d.date; }));
-            y_two.domain([d3.min(data, function(d) { return d.data2; }), 
-                d3.max(data, function(d) { return d.data2; })]);
-
-            // Add all the data .
-            var path = lineSvg.append("path")
-                .data(data)
-                .attr("class", "line")
-                .attr("d", valueline_2(data))
-         
-           var totalLength = path.node().getTotalLength();
-
-            path.attr("stroke-dasharray", totalLength + " " + totalLength)
-              .attr("stroke-dashoffset", totalLength)
-              .transition()
-                .duration(1000)
-                .ease("linear")
-                .attr("stroke-dashoffset", 0);
-
-            // Add correlated data .
-            path_corr = lineSvg.append("path")
-                .data(data)
-                .attr("class", "line")
-                .attr("d", valueline_corr_2(data))
-                .style('stroke','#FF9000');
-
-
-            var totalLength = path_corr.node().getTotalLength();
-
-            path_corr
-              .attr("stroke-dasharray", totalLength + " " + totalLength)
-              .attr("stroke-dashoffset", totalLength)
-                            .transition()
-                            .ease('linear')
-                            .duration(500)
-                            .delay(1000)
-                .attr("stroke-dashoffset", 0);
-
-
-            // Add the X Axis
-            svg.append("g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + 425 + ")")
-                .call(xAxis);
-
-            // Add the Y Axis
-            svg.append("g")
-                .attr("class", "y axis")
-                .attr("transform", "translate(0," + 0+ ")")
-                .call(yAxis2);
+        // Add the Y Axis
+        svg.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(0," + 0+ ")")
+            .call(yAxis2);
 
             //For Loop to Add Transparent Bars
             var startBar;
             var endBar;
             var i=1;
-            data.forEach(function(d) {
-                if(d.flag1==(i % 2)){
-                    if((i % 2)==1){
-                        startBar=d.date;
-
-                    }
-                    else{
-                        endBar=d.date;
-                            lineSvg.append('g')
-                    .attr('width', width)
-                    .attr('height', height)
-                    .attr('class', 'corrbars')
-                    .attr('id','SecondaryGraph1_'+i)
-                    .selectAll('rect').data(bardata)
-                    .enter().append('rect')
+        data.forEach(function(d) {
+            /*Logic to check if looking for 1 (start flag)
+            or looking for 0 (end flag)*/
+            if(d.flag1==(i % 2)){
+                if((i % 2)==1){
+                    startBar=d.date;
+                }
+                else{
+                    endBar=d.date;
+                    lineSvg.append('g')
+                        .attr('width', width)
+                        .attr('height', height)
+                        .attr('class', 'corrbars')
+                        .attr('id','SecondaryGraph1_'+i)
+                        .selectAll('rect').data(bardata)
+                        .enter().append('rect')
+                            .style("opacity",0)           
                             .transition()
-                                    .ease('linear')
-                                    .duration(500)
-                                    .delay(1000)
-                        .style('fill', '#ECB977')
+                                .ease('linear')
+                                .duration(1000)
+                                .style("opacity",1)
+/*                            .transition()
+                                .ease('linear')
+                                .duration(500)
+                                .delay(1000)
+*/                       .style('fill', '#ECB977')
                         .attr('width', x(endBar)-x(startBar) )
                         .attr('height', function(d) {
                             return yScale_secondary(d);
@@ -485,112 +512,92 @@ function drawGraph(inputData,var1,var2,var3) {
                             return x(startBar);
                         })
                         .attr('y', function(d) {
-                            return 325;
+                            return secondaryHeight1_1;
                         })
                          .style("opacity", 0.5); 
 
-                        var id={
+                    var id={
                             id: '#SecondaryGraph1_'+i,
                             text: var2.title + ' & ' + var1.title + ', '+formatDate(startBar)+' through,'+formatDate(endBar)
-                            };
-                            $(id.id).on('click', function () {
+                        };
+                        $(id.id).on('click', function () {
                                 var text = $('#lookup');
                                 text.val("" + id.text);
-        });
-                    }
-                    i=i+1
+                            });
                 }
-            });
+                i=i+1
+            }
         });
 
 
 
-        //Graphing Secondary Graph 2
-        d3.csv(inputData, function(error, data) {
-            data.forEach(function(d) {
-                d.date = parseDate(d.date);
-                d.data3 = +d.data3;
-            });
+    //SECONDARY GRAPH 2 STARTS HERE
 
 
 
-            var yAxis3 = d3.svg.axis().scale(y_three)
-                .orient("left").ticks(5); //yAxis for secondary graph 2
+
+        var yAxis3 = d3.svg.axis().scale(y_three)
+            .orient("left").ticks(5); //yAxis for secondary graph 2
 
 
-            // Scale the range of the data
-            // Sets the axes as well
-            x.domain(d3.extent(data, function(d) { return d.date; }));
-            y_three.domain([d3.min(data, function(d) { return d.data3; }), 
-                d3.max(data, function(d) { return d.data3; })]);
+        // Scale the range of the data
+        // Sets the axes as well
+        x.domain(d3.extent(data, function(d) { return d.date; }));
+        y_three.domain([d3.min(data, function(d) { return d.data3; }), 
+            d3.max(data, function(d) { return d.data3; })]);
 
-            //Making main graph
-            var path = lineSvg.append("path")
-                .data(data)
-                .attr("class", "line")
-                .attr("d", valueline_3(data));
-
-            var totalLength = path.node().getTotalLength();
-
-            path.attr("stroke-dasharray", totalLength + " " + totalLength)
-              .attr("stroke-dashoffset", totalLength)
-              .transition()
-                .duration(1000)
-                .ease("linear")
-                .attr("stroke-dashoffset", 0);
-         
-            //Making correlated data sets
-            var path_corr = lineSvg.append("path")
-                .data(data)
-                .attr("class", "line")
-                .attr("d", valueline_corr_3(data))
-                .style('stroke','#FF9000');
-
-            var totalLength = path_corr.node().getTotalLength();
-
-            path_corr
-              .attr("stroke-dasharray", totalLength + " " + totalLength)
-              .attr("stroke-dashoffset", totalLength)
-                            .transition()
-                            .ease('linear')
-                            .duration(500)
-                            .delay(1000)
-                .attr("stroke-dashoffset", 0);
+        //Making main graph
+        var path = lineSvg.append("path")
+            .data(data)
+            .attr("class", "line")
+            .attr("d", valueline_3(data));
 
 
+     
+        //Making correlated data sets
+        var path_corr = lineSvg.append("path")
+            .data(data)
+            .attr("class", "line")
+            .attr("d", valueline_corr_3(data))
+            .style('stroke','#FF9000');
 
-            // Add the X Axis
-            svg.append("g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + 550 + ")")
-                .call(xAxis);
-
-            // Add the Y Axis
-            svg.append("g")
-                .attr("class", "y axis")
-                .attr("transform", "translate(0," + 0+ ")")
-                .call(yAxis3);
+        //Call animation function
+        pathAnimation(path);
+        pathCorrAnimation(path_corr);
 
 
-            //For Loop to Add Transparent Bars
-            var startBar;
-            var endBar;
-            var i=1;
-            data.forEach(function(d) {
-                if(d.flag2==(i % 2)){
-                    if((i % 2)==1){
-                        startBar=d.date;
+        // Add the X Axis
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + secondaryHeight2_2 + ")")
+            .call(xAxis);
 
-                    }
-                    else{
-                        endBar=d.date;
-                        lineSvg.append('g')
+        // Add the Y Axis
+        svg.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(0," + 0+ ")")
+            .call(yAxis3);
 
-                            .attr('width', width)
-                            .attr('height', height)
-                            .attr('class', 'corrbars')
-                            .attr('id','SecondaryGraph2_'+i)
-                            .selectAll('rect').data(bardata)
+
+        //For Loop to Add Transparent Bars
+        var startBar;
+        var endBar;
+        var i=1;
+        data.forEach(function(d) {
+            if(d.flag2==(i % 2)){
+                if((i % 2)==1){
+                    startBar=d.date;
+
+                }
+                else{
+                    endBar=d.date;
+                    lineSvg.append('g')
+
+                        .attr('width', width)
+                        .attr('height', height)
+                        .attr('class', 'corrbars')
+                        .attr('id','SecondaryGraph2_'+i)
+                        .selectAll('rect').data(bardata)
                         .enter()
                         .append('rect')
                             .transition()
@@ -606,21 +613,21 @@ function drawGraph(inputData,var1,var2,var3) {
                                 return x(startBar);
                             })
                             .attr('y', function(d) {
-                                return 450;
+                                return secondaryHeight2_1;
                             })
                              .style("opacity", 0.5);   
 
-                            var id='#SecondaryGraph2_'+i;
-                            $(function () {
+                        var id='#SecondaryGraph2_'+i;
+                        $(function () {
                             $(id).on('click', function () {
                                 var text = $('#lookup');
                                 text.val("" + var3.title + ' & ' + var1.title + ', '+formatDate(startBar)+' through,'+formatDate(endBar));
                                 });
-                        });  
+                            });  
                     }
-                    i=i+1
-                }
-            });
+                i=i+1
+            }
+        });
 
 
         });
@@ -629,59 +636,117 @@ function drawGraph(inputData,var1,var2,var3) {
 
 
     //Calls the draw title function
-    drawTitle(var1,0);
-    drawTitle(var2,325);
-    drawTitle(var3,450);
+    drawTitle(var1,primaryHeight1_1);
+    drawTitle(var2,secondaryHeight1_1);
+    drawTitle(var3,secondaryHeight2_1);
+    drawLegend();
 
-/*    //Draw the title
-    svg.append("text")
-        .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
-        .attr("transform", "translate("+ 0+","+-30+")")  // text is drawn off the screen top left, move down and out and rotate
-        .attr("class","overalltitle")
-        .text("Comparallel");
+    //Function that draws legends and associated elements
+    function drawLegend(){
+        svg.append("rect")
+            .attr("transform", "translate("+ width +","+primaryHeight1_1+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("class","legendBox")
+            .attr("width", 25)
+            .attr("height", 25);
 
-    //Probably a better wy to do this, but moves the SVG canvas down
-    svg.style('background', '#C9D7D6')
-    svg.style('fill', '#536870')
-    svg.attr("transform", 
-                  "translate(" + 40 + "," + 75+ ")");*/
+        svg.append("text")
+            .attr("text-anchor", "center")  // this makes it easy to centre the text as the transform is applied to the anchor
+                    .attr("class","legendText")
+            .attr("transform", "translate("+ (width+30) +","+(primaryHeight1_1+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .text("Correlated Areas");
 
-    //Draws the title information (Graph title, make priamary button, source)
+        svg.append("text")
+            .attr("text-anchor", "center")  // this makes it easy to centre the text as the transform is applied to the anchor
+                    .attr("class","legendSubText")
+            .attr("transform", "translate("+ (width+30) +","+(primaryHeight1_1+22.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .text("R-Squared > 0.95 (min. 10 observations)");
+        
+        svg.append("rect")
+            .attr("transform", "translate("+ (width-5) +","+(primaryHeight1_1-7.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("class","legendOutline")
+            .attr("width", 190)
+            .attr("height", 40);
+
+        svg.append("line")
+            .attr("transform", "translate("+ width +","+(primaryHeight1_1+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+                .attr("x1", 0)
+                .attr("y1", 0)
+                .attr("x2", 25)
+                .attr("y2", 0)                       
+                .attr("stroke-width", 2)
+                .attr("stroke",'#ECB977');
+    }
+
+    //Draws titles, subtitle buttons and associated elements
     function drawTitle(measure,height){
-        svg.append("text")
+
+        var div = d3.select("body").append("div")   
+            .attr("class", "tooltip")               
+            .style("opacity", 0);
+
+
+        height = height -30;
+                svg.append("text")
                     .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
-                    .attr("transform", "translate("+ 575 +","+height+")")  // text is drawn off the screen top left, move down and out and rotate
+                    .attr("transform", "translate("+ 0+","+height+")")  // text is drawn off the screen top left, move down and out and rotate
                     .attr("class","graphtitle")
-                    .text(measure.title);
+                    .text(measure.title)
+                                        .on("mouseover", function(d) {       
+                        div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);      
+                        div.html(measure.description)  
+                        .style("left", (d3.event.pageX) + "px")     
+                        .style("top", (d3.event.pageY - 28) + "px");    
+                    })                  
+                    .on("mouseout", function(d) {       
+                        div.transition()        
+                        .style("opacity", 0);   
+                    })
+                    .style("opacity",0)           
+                    .transition()
+                                .ease('linear')
+                                .duration(1000)
+                                .style("opacity",1);
+            //Rectangle outline for "Source" button
+            svg.append("rect")
+                .attr("transform", "translate("+ 2 +","+(height+6)+")")  // text is drawn off the screen top left, move down and out and rotate
+                .attr("class","buttonTitle")
+                .attr("width", 34)
+                .attr("height", 12);
+            //Source button with link interactivity
+            svg.append("text")
+                .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
+                .attr("transform", "translate("+ 5 +","+(height+15)+")")  // text is drawn off the screen top left, move down and out and rotate
+                .attr("class","graphsubtitle")
+                .append("a")
+                .attr("xlink:href", "https://fred.stlouisfed.org/series/"+measure.id)
+                .attr("xlink:show", "new")
+                .text("source");
+        //Flag to check ensure that isn't the first element
+        if(height!=0){
+            //Rectangle outline for "Make Primary" button
+            svg.append("rect")
+                .attr("transform", "translate("+ 40 +","+(height+6)+")")  // text is drawn off the screen top left, move down and out and rotate
+                .attr("class","buttonTitle")
+                .attr("width", 70)
+                .attr("height", 12);
 
-        svg.append("text")
-                    .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
-                    .attr("transform", "translate("+ 575 +","+(height+15)+")")  // text is drawn off the screen top left, move down and out and rotate
-                    .attr("class","graphsubtitle")
-                    .append("a")
-                    .attr("onclick", "primary"+measure.id+"()")
-                    .text('make primary');
+            //Make primary button interactivity 
+            svg.append("text")
+                        .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
+                        .attr("transform", "translate("+ 45 +","+(height+15)+")")  // text is drawn off the screen top left, move down and out and rotate
+                        .attr("class","graphsubtitle")
+                        .append("a")
+                        .attr("onclick", "primary"+measure.id+"()")
+                        .text('make primary');
+        }
 
-        svg.append("text")
-            .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
-            .attr("transform", "translate("+ 670 +","+(height+15)+")")  // text is drawn off the screen top left, move down and out and rotate
-            .attr("class","graphsubtitle")
-            .append("a")
-            .attr("xlink:href", "https://fred.stlouisfed.org/series/"+measure.id)
-            .attr("xlink:show", "new")
-            .text("source");
-
-        svg.append("circle")
-            .attr("cx", 662.5)
-            .attr("cy", height+12.5)
-            .attr("r", 2)
-            .attr('fill','#CA7E00')
     }
 
     //Function that maps the Corr Bars on the Primary Graph
     function primaryBars(data,flag_index,i){
                 data.forEach(function(d) {
-                    console.log(flag_index);
                     if(flag_index==1){
                         flag=d.flag1;
                     }
@@ -721,6 +786,32 @@ function drawGraph(inputData,var1,var2,var3) {
                     }
                 });
             }
+
+    //Functions that animate path    
+    function pathAnimation(path){
+        var totalLength = path.node().getTotalLength();
+
+        path
+            .attr("stroke-dasharray", totalLength + " " + totalLength)
+            .attr("stroke-dashoffset", totalLength)
+            .transition()
+                .duration(1000)
+                .ease("linear")
+                .attr("stroke-dashoffset", 0);
+        }
+
+    function pathCorrAnimation(path_corr){
+        var totalLength = path_corr.node().getTotalLength();
+
+        path_corr
+          .attr("stroke-dasharray", totalLength + " " + totalLength)
+          .attr("stroke-dashoffset", totalLength)
+                        .transition()
+                        .ease('linear')
+                        .duration(1500)
+                        .delay(1000)
+            .attr("stroke-dashoffset", 0);
+        }   
 
 }
 

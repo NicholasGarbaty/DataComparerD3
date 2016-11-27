@@ -1,11 +1,19 @@
 p {
 	text-align: center;
-	font-family: Verdana;
+	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
 	color: orange;
 }
 
 
-
+.buttonTitle{
+	fill: transparent;
+	stroke: #CA7E00;
+	stroke-width: .75;
+	z-index: 5;
+}
+.corrbars {
+	cursor: pointer;
+}
 .corrbars:hover {
 	opacity: .7;
 	cursor: pointer;
@@ -18,6 +26,41 @@ p {
 	fill: #ECB977;
 	opacity: 0.25;
 }
+.legendBox{
+	fill: #ECB977;
+	opacity: .4;
+
+}
+
+div.tooltip {	
+    position: absolute;			
+    width: 150px;					
+    height: 70px;					
+    padding: 2px;				
+	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+	font-size: 8px;
+    background: #BABBDF;	
+    border: 0px;		
+    border-radius: 4px;			
+    pointer-events: none;			
+}
+.legendOutline{
+	fill: transparent;
+	stroke: #5B5353;
+	stroke-width: .75;
+	z-index: 5;
+}
+.legendText{
+	fill: black;
+	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+	font-size: 14px;
+
+}
+.legendSubText{
+	fill: black;
+	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+	font-size: 8px;
+}
 .overalltitle {
 	fill: #CA7E00;
 	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
@@ -28,11 +71,14 @@ p {
 	fill: black;
 	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
 	font-size: 18px;
+		cursor: default;
+
+
 }
 .graphsubtitle {
 	fill: #CA7E00;
 	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
-	font-size: 12px;
+	font-size: 9px;
 	cursor: pointer;
 }
 .graphtitle:hover {
