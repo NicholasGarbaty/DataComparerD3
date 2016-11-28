@@ -518,7 +518,7 @@ function drawGraph(inputData,var1,var2,var3) {
 
                     var id={
                             id: '#SecondaryGraph1_'+i,
-                            text: var2.title + ' & ' + var1.title + ', '+formatDate(startBar)+' through,'+formatDate(endBar)
+                            text: var2.title + ' & ' + var1.title + ', '+formatDate(startBar)+' through '+formatDate(endBar)
                         };
                         $(id.id).on('click', function () {
                                 var text = $('#lookup');
@@ -621,7 +621,7 @@ function drawGraph(inputData,var1,var2,var3) {
                         $(function () {
                             $(id).on('click', function () {
                                 var text = $('#lookup');
-                                text.val("" + var3.title + ' & ' + var1.title + ', '+formatDate(startBar)+' through,'+formatDate(endBar));
+                                text.val("" + var3.title + ' & ' + var1.title + ', '+formatDate(startBar)+' through '+formatDate(endBar));
                                 });
                             });  
                     }
@@ -644,7 +644,7 @@ function drawGraph(inputData,var1,var2,var3) {
     //Function that draws legends and associated elements
     function drawLegend(){
         svg.append("rect")
-            .attr("transform", "translate("+ width +","+primaryHeight1_1+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width+35) +","+primaryHeight1_1+")")  // text is drawn off the screen top left, move down and out and rotate
             .attr("class","legendBox")
             .attr("width", 25)
             .attr("height", 25);
@@ -652,29 +652,29 @@ function drawGraph(inputData,var1,var2,var3) {
         svg.append("text")
             .attr("text-anchor", "center")  // this makes it easy to centre the text as the transform is applied to the anchor
                     .attr("class","legendText")
-            .attr("transform", "translate("+ (width+30) +","+(primaryHeight1_1+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width+65) +","+(primaryHeight1_1+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
             .text("Correlated Areas");
 
         svg.append("text")
             .attr("text-anchor", "center")  // this makes it easy to centre the text as the transform is applied to the anchor
                     .attr("class","legendSubText")
-            .attr("transform", "translate("+ (width+30) +","+(primaryHeight1_1+22.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width+65) +","+(primaryHeight1_1+22.5)+")")  // text is drawn off the screen top left, move down and out and rotate
             .text("R-Squared > 0.95 (min. 10 observations)");
         
         svg.append("rect")
-            .attr("transform", "translate("+ (width-5) +","+(primaryHeight1_1-7.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width+30) +","+(primaryHeight1_1-7.5)+")")  // text is drawn off the screen top left, move down and out and rotate
             .attr("class","legendOutline")
             .attr("width", 190)
             .attr("height", 40);
 
         svg.append("line")
-            .attr("transform", "translate("+ width +","+(primaryHeight1_1+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width+35) +","+(primaryHeight1_1+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("x1", 0)
                 .attr("y1", 0)
                 .attr("x2", 25)
                 .attr("y2", 0)                       
                 .attr("stroke-width", 2)
-                .attr("stroke",'#ECB977');
+                .attr("stroke",'#FF9000');
     }
 
     //Draws titles, subtitle buttons and associated elements

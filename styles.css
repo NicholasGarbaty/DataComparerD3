@@ -39,7 +39,7 @@ div.tooltip {
     padding: 2px;				
 	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
 	font-size: 8px;
-    background: #BABBDF;	
+    background: #ECB977;	
     border: 0px;		
     border-radius: 4px;			
     pointer-events: none;			
@@ -87,7 +87,7 @@ div.tooltip {
 	text-decoration: underline;
 }
 #wrapper {
-	background-color: #EBE7E9;
+	background-color: #d6d6d6;
 	width: 75%;
 	height: 100%;
 }
