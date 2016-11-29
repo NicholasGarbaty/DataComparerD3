@@ -12,14 +12,14 @@ var SF_Home_Price_Index= {
 var SF_Tech_Pulse = {
     title: 'SF Tech Pulse',
     id: 'SFTPGRM157SFRBSF',
-    description: "The Tech Pulse Index is an index of coincident indicators of activity in the U.S. information technology sector.he indicators used to compute the index are investment in IT goods, consumption of personal computers and software, employment in the IT sector, as well as industrial production of and shipments by the technology sector. ",
+    description: "The Tech Pulse Index is an index of coincident indicators of activity in the U.S. information technology sector. The indicators used are investment in IT goods, consumption of personal computers and software, employment in the IT sector, as well as industrial production of and shipments by the technology sector.",
     measure: 'Index'
 };
 
 var UR_SF = {
     title: 'Unemployment Rate',
     id: 'SANF806UR',
-    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy",
+    description: "The unemployment rate is a measure of the prevalence of unemployment and it is calculated as a percentage by dividing the number of unemployed individuals by all individuals currently in the labor force.",
     measure: 'Percent'
 };
 
@@ -97,7 +97,7 @@ function drawGraph(inputData,var1,var2,var3) {
     //Determines the height and spacing of the graphs
     primaryHeight = 250;
     secondaryHeight = 90;
-    graphSpacing = 65;
+    graphSpacing = 75;
     leftGraphSpacing = 50;
     //Variables that help future code be cleaner, accomplishes the same as above
     primaryHeight1_1 = graphSpacing;
@@ -668,11 +668,19 @@ function drawGraph(inputData,var1,var2,var3) {
         .attr("class","yAxisTitle")
         .text("Time");
 
+            svg.append("line")
+            .attr("transform", "translate("+ (width+42.5+Xshift) +","+(Yshift+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("class","yAxisTitle")
+        .text("Time");
+
+
+
     //Function that draws legends and associated elements
     function drawLegend(){
-        shift=20;
+        Xshift=-15;
+        Yshift=10
         svg.append("rect")
-            .attr("transform", "translate("+ (width+42.5+shift) +","+(secondaryHeight1_1-2.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width+42.5+Xshift) +","+(Yshift-2.5)+")")  // text is drawn off the screen top left, move down and out and rotate
             .attr("class","legendBox")
             .attr("width", 20)
             .attr("height", 30);
@@ -680,29 +688,40 @@ function drawGraph(inputData,var1,var2,var3) {
         svg.append("text")
             .attr("text-anchor", "center")  // this makes it easy to centre the text as the transform is applied to the anchor
                     .attr("class","legendText")
-            .attr("transform", "translate("+ (width+70+shift) +","+(secondaryHeight1_1+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width+70+Xshift) +","+(Yshift+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
             .text("Correlated Areas");
 
         svg.append("text")
             .attr("text-anchor", "center")  // this makes it easy to centre the text as the transform is applied to the anchor
                     .attr("class","legendSubText")
-            .attr("transform", "translate("+ (width+70+shift) +","+(secondaryHeight1_1+22.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width+70+Xshift) +","+(Yshift+22.5)+")")  // text is drawn off the screen top left, move down and out and rotate
             .text("R-Squared > 0.95 (min. 10 observations)");
         
         svg.append("rect")
-            .attr("transform", "translate("+ (width+35+shift) +","+(secondaryHeight1_1-7.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width+35+Xshift) +","+(Yshift-7.5)+")")  // text is drawn off the screen top left, move down and out and rotate
             .attr("class","legendOutline")
             .attr("width", 190)
             .attr("height", 40);
-
-        svg.append("line")
-            .attr("transform", "translate("+ (width+42.5+shift) +","+(secondaryHeight1_1+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            
+      svg.append("line")
+            .attr("transform", "translate("+ -20 +","+(primaryHeight1_2+25)+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("x1", 0)
                 .attr("y1", 0)
-                .attr("x2", 20)
-                .attr("y2", 0)                       
-                .attr("stroke-width", 2)
+                .attr("x2", width+leftGraphSpacing/2)
+                .attr("y2", 0)               
+                .style("stroke-dasharray", "10,5")       
+                .attr("stroke-width", 1)
                 .attr("stroke",'#FF9000');
+  
+
+        svg.append("line")
+                   .attr("transform", "translate("+ (width+42.5+Xshift) +","+(Yshift+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+                       .attr("x1", 0)
+                       .attr("y1", 0)
+                       .attr("x2", 20)
+                       .attr("y2", 0)                       
+                       .attr("stroke-width", 2)
+                       .attr("stroke",'#FF9000 ');
     }
 
     //Draws titles, subtitle buttons and associated elements
@@ -711,6 +730,7 @@ function drawGraph(inputData,var1,var2,var3) {
         var div = d3.select("body").append("div")   
             .attr("class", "tooltip")               
             .style("opacity", 0);
+        
         height = height -30;
                 svg.append("text")
                     .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
@@ -722,8 +742,8 @@ function drawGraph(inputData,var1,var2,var3) {
                         .duration(200)      
                         .style("opacity", .9);      
                         div.html(measure.description)  
-                        .style("left", (d3.event.pageX) + "px")     
-                        .style("top", (d3.event.pageY - 28) + "px");    
+                        .style("left", (width+leftGraphSpacing+25) + "px")     
+                        .style("top", (height+graphSpacing-10)+ "px");    
                     })                  
                     .on("mouseout", function(d) {       
                         div.transition()        
@@ -734,10 +754,9 @@ function drawGraph(inputData,var1,var2,var3) {
                                 .ease('linear')
                                 .duration(1000)
                                 .style("opacity",1);
+
+
             //Rectangle outline for "Source" button
-
-
-
             svg.append("rect")
                 .attr("transform", "translate("+ 2 +","+(height+6)+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","buttonTitle")
