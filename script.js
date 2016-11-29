@@ -5,14 +5,14 @@
 var SF_Home_Price_Index= {
     title: 'SF Home Price Index', 
     id: 'SFXRSA',
-    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy",
+    description: "The HPI is a broad measure of the movement of single-family house prices. The HPI is a weighted, repeat-sales index, meaning that it measures average price changes in repeat sales or refinancings on the same properties.",
     measure: 'Index'
 };
 
 var SF_Tech_Pulse = {
     title: 'SF Tech Pulse',
     id: 'SFTPGRM157SFRBSF',
-    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy",
+    description: "The Tech Pulse Index is an index of coincident indicators of activity in the U.S. information technology sector.he indicators used to compute the index are investment in IT goods, consumption of personal computers and software, employment in the IT sector, as well as industrial production of and shipments by the technology sector. ",
     measure: 'Index'
 };
 
@@ -27,7 +27,7 @@ var UR_SF = {
 var Seattle_Home_Price_Index= {
     title: 'Seattle Home Price Index',
     id: 'SEXRSA',
-    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy",
+    description: "The HPI is a broad measure of the movement of single-family house prices. The HPI is a weighted, repeat-sales index, meaning that it measures average price changes in repeat sales or refinancings on the same properties.",
     measure: 'Index'
 
 };
@@ -35,7 +35,7 @@ var Seattle_Home_Price_Index= {
 var Seattle_ECI = {
     title: 'Seattle Economic Conditions Index',
     id: 'STWAGRIDX',
-    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy",
+    description: "The economic activity index measures average economic growth in the metropolitan area. It is computed using a dynamic factor model that includes 12 variables measuring various aspects of economic activity in the MSA.",
     measure: "Percent"
 };
 
