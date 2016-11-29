@@ -223,7 +223,7 @@ function drawGraph(inputData,var1,var2,var3) {
 
 
         var yAxis = d3.svg.axis().scale(y)
-            .orient("left").ticks(5); //yAxis for primary graph
+            .orient("left").ticks(10); //yAxis for primary graph
 
         // Scale the range of the data
         // Sets the axes as well
@@ -702,7 +702,7 @@ function drawGraph(inputData,var1,var2,var3) {
             .attr("class","legendOutline")
             .attr("width", 190)
             .attr("height", 40);
-            
+
       svg.append("line")
             .attr("transform", "translate("+ -20 +","+(primaryHeight1_2+25)+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("x1", 0)
