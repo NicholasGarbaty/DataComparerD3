@@ -601,10 +601,11 @@ function drawGraph(inputData,var1,var2,var3) {
                         .selectAll('rect').data(bardata)
                         .enter()
                         .append('rect')
+                            .style("opacity",0)           
                             .transition()
-                            .ease('linear')
-                            .duration(500)
-                            .delay(1000)
+                                .ease('linear')
+                                .duration(1000)
+                                .style("opacity",1)
                             .style('fill', '#ECB977')
                             .attr('width', x(endBar)-x(startBar) )
                             .attr('height', function(d) {
@@ -617,14 +618,14 @@ function drawGraph(inputData,var1,var2,var3) {
                                 return secondaryHeight2_1;
                             })
                              .style("opacity", 0.5);   
-
-                        var id='#SecondaryGraph2_'+i;
-                        $(function () {
-                            $(id).on('click', function () {
+                    var id={
+                            id: '#SecondaryGraph2_'+i,
+                            text: var3.title + ' & ' + var1.title + ', '+formatDate(startBar)+' through '+formatDate(endBar)
+                        };
+                        $(id.id).on('click', function () {
                                 var text = $('#lookup');
-                                text.val("" + var3.title + ' & ' + var1.title + ', '+formatDate(startBar)+' through '+formatDate(endBar));
-                                });
-                            });  
+                                text.val("" + id.text);
+                            }); 
                     }
                 i=i+1
             }
