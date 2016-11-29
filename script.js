@@ -5,35 +5,38 @@
 var SF_Home_Price_Index= {
     title: 'SF Home Price Index', 
     id: 'SFXRSA',
-    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy"
+    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy",
+    measure: 'Index'
 };
 
 var SF_Tech_Pulse = {
     title: 'SF Tech Pulse',
     id: 'SFTPGRM157SFRBSF',
-    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy"
+    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy",
+    measure: 'Index'
 };
 
 var UR_SF = {
     title: 'Unemployment Rate',
     id: 'SANF806UR',
-    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy"
-
+    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy",
+    measure: 'Percent'
 };
 
 //Three parameters of interest
 var Seattle_Home_Price_Index= {
     title: 'Seattle Home Price Index',
     id: 'SEXRSA',
-    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy"
+    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy",
+    measure: 'Index'
 
 };
 
 var Seattle_ECI = {
     title: 'Seattle Economic Conditions Index',
     id: 'STWAGRIDX',
-    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy"
-
+    description: "Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy Clippy",
+    measure: "Percent"
 };
 
 //Draws default graph
@@ -95,6 +98,7 @@ function drawGraph(inputData,var1,var2,var3) {
     primaryHeight = 250;
     secondaryHeight = 90;
     graphSpacing = 65;
+    leftGraphSpacing = 50;
     //Variables that help future code be cleaner, accomplishes the same as above
     primaryHeight1_1 = graphSpacing;
     primaryHeight1_2 = primaryHeight1_1+primaryHeight;
@@ -106,7 +110,7 @@ function drawGraph(inputData,var1,var2,var3) {
     secondaryHeight2_2 =  secondaryHeight2_1+secondaryHeight;
 
     // Set the ranges
-    var x = d3.time.scale().range([0, width]);
+    var x = d3.time.scale().range([leftGraphSpacing, width+leftGraphSpacing]);
     var y = d3.scale.linear().range([primaryHeight1_2, primaryHeight1_1]); //Range for primary graph
     var y_two = d3.scale.linear().range([secondaryHeight1_2, secondaryHeight1_1]); //Range for secondary graph 1
     var y_three = d3.scale.linear().range([secondaryHeight2_2, secondaryHeight2_1]); //Range for secondary graph 2
@@ -264,6 +268,7 @@ function drawGraph(inputData,var1,var2,var3) {
         // Add the Y Axis
         svg.append("g")
             .attr("class", "y axis")
+            .attr("transform", "translate("+leftGraphSpacing+"," + 0+ ")")
             .call(yAxis);
 
        // append the x line
@@ -472,7 +477,7 @@ function drawGraph(inputData,var1,var2,var3) {
         // Add the Y Axis
         svg.append("g")
             .attr("class", "y axis")
-            .attr("transform", "translate(0," + 0+ ")")
+            .attr("transform", "translate("+leftGraphSpacing+"," + 0+ ")")
             .call(yAxis2);
 
             //For Loop to Add Transparent Bars
@@ -576,7 +581,7 @@ function drawGraph(inputData,var1,var2,var3) {
         // Add the Y Axis
         svg.append("g")
             .attr("class", "y axis")
-            .attr("transform", "translate(0," + 0+ ")")
+            .attr("transform", "translate("+leftGraphSpacing+"," + 0+ ")")
             .call(yAxis3);
 
 
@@ -641,6 +646,9 @@ function drawGraph(inputData,var1,var2,var3) {
     drawTitle(var1,primaryHeight1_1);
     drawTitle(var2,secondaryHeight1_1);
     drawTitle(var3,secondaryHeight2_1);
+    drawYAxisLabel(var3.measure,(primaryHeight1_1+primaryHeight1_2)/2);
+    drawYAxisLabel(var2.measure,(secondaryHeight1_1+secondaryHeight1_2)/2);
+    drawYAxisLabel(var3.measure,(secondaryHeight2_1+secondaryHeight2_2)/2);
     drawLegend();
 
     //Function that draws legends and associated elements
@@ -701,8 +709,6 @@ function drawGraph(inputData,var1,var2,var3) {
         var div = d3.select("body").append("div")   
             .attr("class", "tooltip")               
             .style("opacity", 0);
-
-
         height = height -30;
                 svg.append("text")
                     .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
@@ -728,12 +734,7 @@ function drawGraph(inputData,var1,var2,var3) {
                                 .style("opacity",1);
             //Rectangle outline for "Source" button
 
-            //Source button with link interactivity
-            svg.append("text")
-                .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
-                .attr("transform", "translate("+ 5 +","+(height+15)+")")  // text is drawn off the screen top left, move down and out and rotate
-                .attr("class","graphsubtitle")
-                .text("source");
+
 
             svg.append("rect")
                 .attr("transform", "translate("+ 2 +","+(height+6)+")")  // text is drawn off the screen top left, move down and out and rotate
@@ -742,6 +743,12 @@ function drawGraph(inputData,var1,var2,var3) {
                 .attr("height", 12)                .append("a")
                 .attr("xlink:href", "https://fred.stlouisfed.org/series/"+measure.id)
                 .attr("xlink:show", "new").append("text")
+                .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
+                .attr("transform", "translate("+ 5 +","+(height+15)+")")  // text is drawn off the screen top left, move down and out and rotate
+                .attr("class","graphsubtitle")
+                .text("source");
+                            //Source button with link interactivity
+            svg.append("text")
                 .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
                 .attr("transform", "translate("+ 5 +","+(height+15)+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","graphsubtitle")
@@ -822,6 +829,15 @@ function drawGraph(inputData,var1,var2,var3) {
                 .ease("linear")
                 .attr("stroke-dashoffset", 0);
         }
+
+
+    function drawYAxisLabel(axisText,height){
+                svg.append("text")
+                    .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
+                    .attr("transform", "translate("+ -40 +","+height+")")  // text is drawn off the screen top left, move down and out and rotate
+                    .attr("class","yAxisTitle")
+                    .text(axisText);
+    }
 
     function pathCorrAnimation(path_corr){
         var totalLength = path_corr.node().getTotalLength();
