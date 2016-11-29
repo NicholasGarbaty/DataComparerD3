@@ -281,7 +281,7 @@ function drawGraph(inputData,var1,var2,var3) {
             .style("stroke", "blue")
             .style("stroke-dasharray", "3,3")
             .style("opacity", 0.5)
-            .attr("x1", width)
+            .attr("x1", 0)
             .attr("x2", width);
 
         // append the circle at the intersection
@@ -419,14 +419,15 @@ function drawGraph(inputData,var1,var2,var3) {
                                      0 + ")")
                             .attr("y1",y(d.data1))
                            .attr("y2",  secondaryHeight2_2);
-
+//y1 = y(d.data1)if you only want dashed line to go up to line instead of through
             focus.select(".y")
                 .attr("transform",
-                      "translate(" + width * -1 + "," +
+                      "translate(" + 0+ "," +
                                      y(d.data1) + ")")
-                           .attr("x2", width + 550);
+                           .attr("x2", x(d.date));
 
         }
+//x2=550 if you only want dashed line to go through line instead of to
 
         //Used to call method for graphing corr bars on primary graph
 /*            primaryBars(data,1,1);
@@ -644,34 +645,50 @@ function drawGraph(inputData,var1,var2,var3) {
     //Function that draws legends and associated elements
     function drawLegend(){
         svg.append("rect")
-            .attr("transform", "translate("+ (width+35) +","+primaryHeight1_1+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width+7.5) +","+(secondaryHeight1_1-2.5)+")")  // text is drawn off the screen top left, move down and out and rotate
             .attr("class","legendBox")
-            .attr("width", 25)
-            .attr("height", 25);
+            .attr("width", 20)
+            .attr("height", 30);
 
         svg.append("text")
             .attr("text-anchor", "center")  // this makes it easy to centre the text as the transform is applied to the anchor
                     .attr("class","legendText")
-            .attr("transform", "translate("+ (width+65) +","+(primaryHeight1_1+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width+35) +","+(secondaryHeight1_1+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
             .text("Correlated Areas");
 
         svg.append("text")
             .attr("text-anchor", "center")  // this makes it easy to centre the text as the transform is applied to the anchor
                     .attr("class","legendSubText")
-            .attr("transform", "translate("+ (width+65) +","+(primaryHeight1_1+22.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width+35) +","+(secondaryHeight1_1+22.5)+")")  // text is drawn off the screen top left, move down and out and rotate
             .text("R-Squared > 0.95 (min. 10 observations)");
         
         svg.append("rect")
-            .attr("transform", "translate("+ (width+30) +","+(primaryHeight1_1-7.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width) +","+(secondaryHeight1_1-7.5)+")")  // text is drawn off the screen top left, move down and out and rotate
             .attr("class","legendOutline")
             .attr("width", 190)
             .attr("height", 40);
 
+/*        var lineData = [ { "x": 0,   "y": 3},  { "x": 4,  "y": -3},
+            { "x": 8,  "y": 7}, { "x": 12,  "y": -1},
+            { "x": 16,  "y": 7},  { "x": 20, "y": 0}];
+
+        var lineFunction = d3.svg.line()
+            .x(function(d) { return d.x; })
+            .y(function(d) { return d.y; })
+            .interpolate("basis");
+
+        svg.append("path")
+            .attr("d", lineFunction(lineData))
+                        .attr("class", "line")
+             .attr("transform", "translate("+ (width+37.5) +","+(primaryHeight1_2+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+                .attr("stroke-width", 2)
+                .attr("fill",'#FF9000');*/
+
         svg.append("line")
-            .attr("transform", "translate("+ (width+35) +","+(primaryHeight1_1+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width+7.5) +","+(secondaryHeight1_1+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("x1", 0)
                 .attr("y1", 0)
-                .attr("x2", 25)
+                .attr("x2", 20)
                 .attr("y2", 0)                       
                 .attr("stroke-width", 2)
                 .attr("stroke",'#FF9000');
@@ -709,19 +726,24 @@ function drawGraph(inputData,var1,var2,var3) {
                                 .duration(1000)
                                 .style("opacity",1);
             //Rectangle outline for "Source" button
-            svg.append("rect")
-                .attr("transform", "translate("+ 2 +","+(height+6)+")")  // text is drawn off the screen top left, move down and out and rotate
-                .attr("class","buttonTitle")
-                .attr("width", 34)
-                .attr("height", 12);
+
             //Source button with link interactivity
             svg.append("text")
                 .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
                 .attr("transform", "translate("+ 5 +","+(height+15)+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","graphsubtitle")
-                .append("a")
+                .text("source");
+
+            svg.append("rect")
+                .attr("transform", "translate("+ 2 +","+(height+6)+")")  // text is drawn off the screen top left, move down and out and rotate
+                .attr("class","buttonTitle")
+                .attr("width", 34)
+                .attr("height", 12)                .append("a")
                 .attr("xlink:href", "https://fred.stlouisfed.org/series/"+measure.id)
-                .attr("xlink:show", "new")
+                .attr("xlink:show", "new").append("text")
+                .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
+                .attr("transform", "translate("+ 5 +","+(height+15)+")")  // text is drawn off the screen top left, move down and out and rotate
+                .attr("class","graphsubtitle")
                 .text("source");
         //Flag to check ensure that isn't the first element
         if(height!=0){

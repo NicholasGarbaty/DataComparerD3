@@ -1,3 +1,10 @@
+/*Color Reference:
+#CA7E00 - Highlight correlation color
+#fff2e6 - Background Color
+
+*/
+
+
 p {
 	text-align: center;
 	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
@@ -6,11 +13,16 @@ p {
 
 
 .buttonTitle{
-	fill: transparent;
-	stroke: #CA7E00;
+	fill: #EABC6F;
+	stroke: #CA7E00;	
 	stroke-width: .75;
-	z-index: 5;
+	z-index: 15;
+	border-radius: 20px;
 }
+.buttonTitle:hover{
+	opacity:0.5;
+}
+
 .corrbars {
 	cursor: pointer;
 }
@@ -76,20 +88,28 @@ div.tooltip {
 
 }
 .graphsubtitle {
-	fill: #CA7E00;
+	fill: 	#4c4c4c;
 	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
 	font-size: 9px;
 	cursor: pointer;
+	z-index: 10;
 }
 .graphtitle:hover {
 }
 .graphsubtitle:hover {
-	text-decoration: underline;
+	/*text-decoration: underline;*/
 }
 #wrapper {
 	background-color: #fff2e6;
 	width: 75%;
 	height: 100%;
+}
+
+
+.legendLine{
+
+stroke-width: 2px;
+fill: #FF9000;
 }
 
 body {
