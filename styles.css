@@ -13,14 +13,15 @@ p {
 
 
 .buttonTitle{
-	fill: #EABC6F;
-	stroke: #CA7E00;	
+	fill: #FFDBA0;
+	stroke: #A37323;	
 	stroke-width: .75;
-	z-index: 15;
+	z-index: 5;
 	border-radius: 20px;
 }
 .buttonTitle:hover{
-	opacity:0.5;
+		cursor: pointer;
+
 }
 
 .corrbars {
@@ -103,6 +104,12 @@ div.tooltip {
 	background-color: #fff2e6;
 	width: 75%;
 	height: 100%;
+}
+
+.yAxisTitle{
+	font-family: "Avant Garde", Avantgarde, "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+	font-size: 12px;
+
 }
 
 
