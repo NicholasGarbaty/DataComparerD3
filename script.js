@@ -263,13 +263,17 @@ function drawGraph(inputData,var1,var2,var3) {
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + primaryHeight1_2+ ")")
-            .call(xAxis);
+            .call(xAxis)
+                        .selectAll("text")
+                .style("font-size","11px");;
 
         // Add the Y Axis
         svg.append("g")
             .attr("class", "y axis")
             .attr("transform", "translate("+leftGraphSpacing+"," + 0+ ")")
-            .call(yAxis);
+            .call(yAxis)
+            .selectAll("text")
+                .style("font-size","11px");;
 
        // append the x line
         focus.append("line")
@@ -472,13 +476,17 @@ function drawGraph(inputData,var1,var2,var3) {
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + secondaryHeight1_2 + ")")
-            .call(xAxis);
+            .call(xAxis)
+                        .selectAll("text")
+                .style("font-size","11px");;
 
         // Add the Y Axis
         svg.append("g")
             .attr("class", "y axis")
             .attr("transform", "translate("+leftGraphSpacing+"," + 0+ ")")
-            .call(yAxis2);
+            .call(yAxis2)
+                        .selectAll("text")
+                .style("font-size","11px");;
 
             //For Loop to Add Transparent Bars
             var startBar;
@@ -545,7 +553,6 @@ function drawGraph(inputData,var1,var2,var3) {
         var yAxis3 = d3.svg.axis().scale(y_three)
             .orient("left").ticks(5); //yAxis for secondary graph 2
 
-
         // Scale the range of the data
         // Sets the axes as well
         x.domain(d3.extent(data, function(d) { return d.date; }));
@@ -576,13 +583,17 @@ function drawGraph(inputData,var1,var2,var3) {
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + secondaryHeight2_2 + ")")
-            .call(xAxis);
+            .call(xAxis)
+            .selectAll("text")
+                .style("font-size","11px");
 
         // Add the Y Axis
         svg.append("g")
             .attr("class", "y axis")
             .attr("transform", "translate("+leftGraphSpacing+"," + 0+ ")")
-            .call(yAxis3);
+            .call(yAxis3)
+            .selectAll("text")
+                .style("font-size","11px");
 
 
         //For Loop to Add Transparent Bars
@@ -651,10 +662,17 @@ function drawGraph(inputData,var1,var2,var3) {
     drawYAxisLabel(var3.measure,(secondaryHeight2_1+secondaryHeight2_2)/2);
     drawLegend();
 
+    svg.append("text")
+        .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
+        .attr("transform", "translate("+ (leftGraphSpacing+width)/2 +","+(secondaryHeight2_2+graphSpacing/1.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+        .attr("class","yAxisTitle")
+        .text("Time");
+
     //Function that draws legends and associated elements
     function drawLegend(){
+        shift=20;
         svg.append("rect")
-            .attr("transform", "translate("+ (width+7.5) +","+(secondaryHeight1_1-2.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width+42.5+shift) +","+(secondaryHeight1_1-2.5)+")")  // text is drawn off the screen top left, move down and out and rotate
             .attr("class","legendBox")
             .attr("width", 20)
             .attr("height", 30);
@@ -662,39 +680,23 @@ function drawGraph(inputData,var1,var2,var3) {
         svg.append("text")
             .attr("text-anchor", "center")  // this makes it easy to centre the text as the transform is applied to the anchor
                     .attr("class","legendText")
-            .attr("transform", "translate("+ (width+35) +","+(secondaryHeight1_1+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width+70+shift) +","+(secondaryHeight1_1+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
             .text("Correlated Areas");
 
         svg.append("text")
             .attr("text-anchor", "center")  // this makes it easy to centre the text as the transform is applied to the anchor
                     .attr("class","legendSubText")
-            .attr("transform", "translate("+ (width+35) +","+(secondaryHeight1_1+22.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width+70+shift) +","+(secondaryHeight1_1+22.5)+")")  // text is drawn off the screen top left, move down and out and rotate
             .text("R-Squared > 0.95 (min. 10 observations)");
         
         svg.append("rect")
-            .attr("transform", "translate("+ (width) +","+(secondaryHeight1_1-7.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width+35+shift) +","+(secondaryHeight1_1-7.5)+")")  // text is drawn off the screen top left, move down and out and rotate
             .attr("class","legendOutline")
             .attr("width", 190)
             .attr("height", 40);
 
-/*        var lineData = [ { "x": 0,   "y": 3},  { "x": 4,  "y": -3},
-            { "x": 8,  "y": 7}, { "x": 12,  "y": -1},
-            { "x": 16,  "y": 7},  { "x": 20, "y": 0}];
-
-        var lineFunction = d3.svg.line()
-            .x(function(d) { return d.x; })
-            .y(function(d) { return d.y; })
-            .interpolate("basis");
-
-        svg.append("path")
-            .attr("d", lineFunction(lineData))
-                        .attr("class", "line")
-             .attr("transform", "translate("+ (width+37.5) +","+(primaryHeight1_2+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
-                .attr("stroke-width", 2)
-                .attr("fill",'#FF9000');*/
-
         svg.append("line")
-            .attr("transform", "translate("+ (width+7.5) +","+(secondaryHeight1_1+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
+            .attr("transform", "translate("+ (width+42.5+shift) +","+(secondaryHeight1_1+12.5)+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("x1", 0)
                 .attr("y1", 0)
                 .attr("x2", 20)
@@ -740,9 +742,8 @@ function drawGraph(inputData,var1,var2,var3) {
                 .attr("transform", "translate("+ 2 +","+(height+6)+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","buttonTitle")
                 .attr("width", 34)
-                .attr("height", 12)                .append("a")
-                .attr("xlink:href", "https://fred.stlouisfed.org/series/"+measure.id)
-                .attr("xlink:show", "new").append("text")
+                .attr("height", 12)                
+                .append("text")
                 .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
                 .attr("transform", "translate("+ 5 +","+(height+15)+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","graphsubtitle")
@@ -752,9 +753,13 @@ function drawGraph(inputData,var1,var2,var3) {
                 .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
                 .attr("transform", "translate("+ 5 +","+(height+15)+")")  // text is drawn off the screen top left, move down and out and rotate
                 .attr("class","graphsubtitle")
+                .append("a")
+                .attr("xlink:href", "https://fred.stlouisfed.org/series/"+measure.id)
+                .attr("xlink:show", "new")
                 .text("source");
+
         //Flag to check ensure that isn't the first element
-        if(height!=0){
+        if(height!=(primaryHeight1_1-30)){
             //Rectangle outline for "Make Primary" button
             svg.append("rect")
                 .attr("transform", "translate("+ 40 +","+(height+6)+")")  // text is drawn off the screen top left, move down and out and rotate
@@ -834,7 +839,7 @@ function drawGraph(inputData,var1,var2,var3) {
     function drawYAxisLabel(axisText,height){
                 svg.append("text")
                     .attr("text-anchor", "left")  // this makes it easy to centre the text as the transform is applied to the anchor
-                    .attr("transform", "translate("+ -40 +","+height+")")  // text is drawn off the screen top left, move down and out and rotate
+                    .attr("transform", "translate("+ -20 +","+height+")")  // text is drawn off the screen top left, move down and out and rotate
                     .attr("class","yAxisTitle")
                     .text(axisText);
     }
