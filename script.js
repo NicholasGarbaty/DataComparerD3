@@ -11,7 +11,7 @@ var SF_Home_Price_Index= {
 
 var SF_Tech_Pulse = {
     title: 'SF Tech Pulse',
-    id: 'SFTPGRM157SFRBSF',
+    id: 'SFTPINDM114SFRBSF',
     description: "The Tech Pulse Index is an index of coincident indicators of activity in the U.S. information technology sector. The indicators used are investment in IT goods, consumption of personal computers and software, employment in the IT sector, as well as industrial production of and shipments by the technology sector.",
     measure: 'Index'
 };
@@ -51,7 +51,7 @@ function primarySFXRSA(){
             SF_Home_Price_Index, UR_SF,SF_Tech_Pulse)
 }
 
-function primarySFTPGRM157SFRBSF(){
+function primarySFTPINDM114SFRBSF(){
     d3.select("svg").remove();
     console.log("Primary is SF Tech Pulse")
     drawGraph('primaryTechPulse.csv',
